@@ -1,0 +1,109 @@
+# Ignore Node.js build artifacts
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# Ignore .NET build artifacts
+/bin
+/obj
+/.vscode
+.vs
+
+# Ignore Visual Studio files
+/.suo
+/*.suo
+/*.user
+/*.sln.docstates
+
+# Ignore user-specific files and settings
+/.idea
+/.vscode
+/.suo
+/.user
+/.sln.docstates
+*.suo
+*.user
+*.sln.docstates
+
+# Ignore Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Ignore macOS files
+.DS_Store
+
+# Ignore environment-specific files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore log files and local database files
+*.log
+*.sqlite
+
+# Ignore dependencies and build output of React
+/build
+/node_modules
+
+# Ignore .NET Core and .NET Framework artifacts
+/bin
+/obj
+*.user
+*.suo
+*.bak
+*.vspscc
+_TemporaryKey.pfx
+
+# Ignore Visual Studio temporary files
+*.user
+*.suo
+
+# Ignore .NET Core Visual Studio Code debug logs
+.vscode/*.log
+
+# Ignore npm debugging logs
+npm-debug.log*
+
+# Ignore yarn errors file
+yarn-error.log
+
+# Ignore JetBrains IDEs
+.idea
+
+# Ignore npm cache
+.npm
+
+# Ignore pnpm debug log
+pnpm-debug.log*
+
+# Ignore Yarn Integrity file
+.yarn-integrity
+
+# Ignore Yarn v2 state file
+.yarn/state
+
+# Ignore Yarn v2 zip files
+.yarn/releases
+
+# Ignore ESLint cache
+.eslintcache
+
+# Ignore TypeScript build output
+*.tsbuildinfo
+
+# Ignore Next.js build output
+/out
+
+# Ignore build output for Gatsby
+/.cache
+
+# Ignore storybook build output
+/storybook-static
+
+# Ignore .NET SDK History
+.dotnet/
+
+# Ignore Yarn logs
+yarn-error.log
+yarn-error.log.*
