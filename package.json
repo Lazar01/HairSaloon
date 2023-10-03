@@ -1,0 +1,12 @@
+{
+  "name": "hairsaloon",
+  "version": "1.0.0",
+  "description": "This project aims to streamline and modernize the operations of a hair salon, enhancing the customer experience and optimizing the salon's management processes.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
