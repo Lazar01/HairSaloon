@@ -8,7 +8,7 @@ function SiteLayout(){
                 <Link to="/">Home</Link>
               </li>
               <li>
-                <Link to="/blogs">Blogs</Link>
+                <Link to="/blog">Blogs</Link>
               </li>
               <li>
                 <Link to="/contact">Contact</Link>
