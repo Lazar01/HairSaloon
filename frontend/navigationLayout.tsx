@@ -1,5 +1,5 @@
 import { Outlet, Link } from "react-router-dom";
-function SiteLayout(){
+function NavigationLayout(){
     return (
         <>
           <nav>
@@ -21,4 +21,4 @@ function SiteLayout(){
       )
 
 }
-export default SiteLayout;
+export default NavigationLayout;
