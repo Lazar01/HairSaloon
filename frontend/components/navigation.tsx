@@ -7,12 +7,12 @@ import headerBackground from "../assets/barberHeaderBackground.jpg"
 function NavBar(){
     return(
         <BrowserRouter>
-        <img src={headerBackground} className="w-full h-[50vh]"></img>
+        <img src={headerBackground} className="absolute left-0 right-0 top-0 bottom-0 -z-50 w-full h-full"/>
         <Routes>
           <Route path="/" element={<NavigationLayout />}>
             <Route index element={<HomePage />} />
             <Route path="/contact" element={<ContactPage />} />
-            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog" element={<BlogPage />} />  
             {/* <Route path="*" element={<NoPage />} /> */}
           </Route>
         </Routes>
