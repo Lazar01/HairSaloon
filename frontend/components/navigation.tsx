@@ -15,6 +15,7 @@ function NavBar(){
             <Route path="/blog" element={<BlogPage />} />  
             {/* <Route path="*" element={<NoPage />} /> */}
           </Route>
+          <Route path="/appointment" element={<HomePage/>}></Route>
         </Routes>
       </BrowserRouter>
     )
