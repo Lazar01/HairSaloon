@@ -3,7 +3,7 @@ import { Outlet, Link } from "react-router-dom";
 function NavigationLayout() {
   return (
     <>
-    <nav className="bg-slate-400 bg-opacity-25 flex">
+    <nav className="bg-blue-gray-700 bg-opacity-75 sticky flex">
     <Link to="/" className="pl-12 flex h-24 items-center justify-center text-white font-extrabold leading-none tracking-tight  md:text-2xl drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)] basis-2/12">
       <div className="">Barber Saloon   
         <img className="sm:h-6 md:h-10 ml-auto mr-auto" src="../assets/Logo.png"></img>  
@@ -34,3 +34,4 @@ function NavigationLayout() {
 }
 
 export default NavigationLayout;
+

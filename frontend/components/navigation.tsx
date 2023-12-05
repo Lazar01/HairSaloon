@@ -13,9 +13,9 @@ function NavBar(){
             <Route index element={<HomePage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />  
+            <Route path="/appointment" element={<BlogPage/>}></Route>
             {/* <Route path="*" element={<NoPage />} /> */}
-          </Route>
-          <Route path="/appointment" element={<HomePage/>}></Route>
+          </Route>       
         </Routes>
       </BrowserRouter>
     )
