@@ -7,7 +7,7 @@ import {
     Typography,
     Button,
   } from "@material-tailwind/react";
-  import Modal from "../components/modal"
+  import Modal from "../components/modalDatePick"
   import { useState } from "react";
 function HomePage(){
   const [showModal, setShowModal] = useState(false);
@@ -46,6 +46,7 @@ function HomePage(){
                         </CardBody>
                         <CardFooter className="pt-0">
                             <Button
+                            onClick={() => setShowModal(!showModal)}
                             ripple={false}
                             fullWidth={true}
                             className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
@@ -82,6 +83,7 @@ function HomePage(){
                         </CardBody>
                         <CardFooter className="pt-0">
                             <Button
+                            onClick={() => setShowModal(!showModal)}
                             ripple={false}
                             fullWidth={true}
                             className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"

@@ -41,7 +41,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                     className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => toggleModal(showModal)}
                   >
-                    <span className="text-black text-2xl block outline-none focus:outline-none">
+                    <span className="text-red-900 pl-10 text-2xl block outline-none focus:outline-none">
                       X
                     </span>
                   </button>
