@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Input, Popover, PopoverHandler, PopoverContent } from "@material-tailwind/react";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
-import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 interface ModalProps {
   showModal: boolean;

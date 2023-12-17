@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import {
     Card,
     CardHeader,
@@ -9,16 +8,16 @@ import {
   } from "@material-tailwind/react";
   import Modal from "../components/modalDatePick"
   import { useState } from "react";
+  import Footer from "../components/footer";
 function HomePage(){
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => {
-    console.log("Pokrenuto");
     setShowModal((prevShowModal) => !prevShowModal);
   };
     return(
         <div className="flex flex-col">
             <h2 className="pt-12 text-6xl text-center text-white font-extrabold leading-none tracking-tight  md:text-9xl drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">Hair Barber</h2>
-                <div className="flex md:pl-80 md:pr-80 pl-12 pr-12 justify-between pt-24 items-center">
+                <div className="flex sm:flex-col md:flex-row justify-center gap-x-12 pt-24 items-center">
                     <Card className="w-96">
                         <CardHeader shadow={false} floated={false} className="h-80">
                             <img
@@ -111,9 +110,10 @@ function HomePage(){
                 
                 </p>
                 <span className="bg-black flex justify-center pt-10 pb-6">
-                    <Button onClick={() => setShowModal(!showModal)} variant="outlined" color="amber" className="text-xl md:text-2xl sm:w-32 sm:h-16 md:h-24 md:w-60 ">Make an appointment</Button>
+                    <Button onClick={() => setShowModal(!showModal)} variant="outlined" color="amber" className="text-xl sm:text-sm  md:text-2xl sm:w-32 sm:h-16 md:h-24 md:w-60 ">Make an appointment</Button>
                 </span>
                 {showModal ? <Modal showModal={showModal} toggleModal={toggleModal} /> : null}
+                <Footer/>
         </div>
         
     );
