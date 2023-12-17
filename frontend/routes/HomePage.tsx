@@ -18,7 +18,7 @@ function HomePage(){
     return(
         <div className="flex flex-col">
             <h2 className="pt-12 text-6xl text-center text-white font-extrabold leading-none tracking-tight  md:text-9xl drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">Hair Barber</h2>
-                <div className="flex md:pl-52 md:pr-52 pl-12 pr-12 justify-between pt-24 items-center">
+                <div className="flex md:pl-80 md:pr-80 pl-12 pr-12 justify-between pt-24 items-center">
                     <Card className="w-96">
                         <CardHeader shadow={false} floated={false} className="h-80">
                             <img
