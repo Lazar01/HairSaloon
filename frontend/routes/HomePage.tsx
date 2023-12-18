@@ -57,7 +57,7 @@ function HomePage(){
                     <Card className="w-96 bg-black">
                         <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
                             <img
-                            src="../assets/homePageImg1.jpg"
+                            src="../assets/homePageImg2.jpg"
                             alt="card-image"
                             className="h-full w-full object-cover"
                             />
@@ -93,7 +93,7 @@ function HomePage(){
                     <Card className="w-96 bg-black">
                         <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
                             <img
-                            src="../assets/homePageImg2.jpg"
+                            src="../assets/homePageImg3.jpg"
                             alt="card-image"
                             className="h-full w-full object-cover"
                             />
