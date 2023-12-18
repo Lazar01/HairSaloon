@@ -2,13 +2,13 @@ import Footer from "../components/footer";
 const StaffPage = () =>{
 return(
 <>
-<div className="container mt-6 mx-auto">
+<div className="mx-auto bg-white">
   <section className="text-center">
-    <h2 className= "text-3xl font-bold">
+    <h2 className= "pt-6 text-3xl font-bold">
       Meet the <u className="text-primary dark:text-primary-400">team</u>
     </h2>
 
-    <div className="mt-6 mb-6 grid gap-x-6 md:grid-cols-3 lg:gap-x-12">
+    <div className="mt-6 mb-6 px-6 grid gap-x-6 md:grid-cols-3 lg:gap-x-12">
       <div className="mb-6 lg:mb-0">
         <div
           className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">

@@ -15,10 +15,10 @@ function HomePage(){
     setShowModal((prevShowModal) => !prevShowModal);
   };
     return(
-        <div className="flex flex-col">
-            <h2 className="pt-6 text-6xl text-center text-white font-extrabold leading-none tracking-tight sm:text-6xl  md:text-8xl drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">Hair Barber</h2>
+        <div className="flex flex-col bg-white bg-opacity-90">
+            <h2 className="pt-6 text-6xl text-center text-black font-extrabold leading-none tracking-tight sm:text-6xl  md:text-8xl drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">Hair Barber</h2>
                 <div className="flex pt-6 sm:mt-12 md:mt-0   flex-col md:flex-row justify-center gap-x-12 sm:gap-y-12 md:gap-y-0 items-center">
-                    <Card className="w-96">
+                    <Card className="w-96 bg-black">
                         <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
                             <img
                             src="../assets/homePageImg1.jpg"
@@ -28,16 +28,16 @@ function HomePage(){
                         </CardHeader>
                         <CardBody>
                             <div className="mb-2 flex items-center justify-between">
-                            <Typography color="blue-gray" className="font-medium">
+                            <Typography color="blue" className="font-medium">
                             A clean angled haircut
                             </Typography>
-                            <Typography color="blue-gray" className="font-medium">
+                            <Typography color="blue" className="font-medium">
                                 $115.00
                             </Typography>
                             </div>
                             <Typography
                             variant="small"
-                            color="gray"
+                            color="white"
                             className="font-normal opacity-75"
                             >
                             A clean angled haircut features a precise and defined look with hair cut at an angle, creating sharp lines and a polished appearance.
@@ -48,13 +48,13 @@ function HomePage(){
                             onClick={() => setShowModal(!showModal)}
                             ripple={false}
                             fullWidth={true}
-                            className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
+                            className="bg-blue-gray-900/10 text-blue-gray-200 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
                             >
                             Make appointment
                             </Button>
                         </CardFooter>
                     </Card>
-                    <Card className="w-96">
+                    <Card className="w-96 bg-black">
                         <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
                             <img
                             src="../assets/homePageImg2.jpg"
@@ -64,16 +64,16 @@ function HomePage(){
                         </CardHeader>
                         <CardBody>
                             <div className="mb-2 flex items-center justify-between">
-                            <Typography color="blue-gray" className="font-medium">
+                            <Typography color="blue" className="font-medium">
                                 Fade
                             </Typography>
-                            <Typography color="blue-gray" className="font-medium">
+                            <Typography color="blue" className="font-medium">
                                 $95.00
                             </Typography>
                             </div>
                             <Typography
                             variant="small"
-                            color="gray"
+                            color="white"
                             className="font-normal opacity-75"
                             >
                             A fade haircut is a short hairstyle with a gradual transition from short to shorter hair, 
@@ -85,7 +85,7 @@ function HomePage(){
                             onClick={() => setShowModal(!showModal)}
                             ripple={false}
                             fullWidth={true}
-                            className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
+                            className="bg-blue-gray-900/10 text-blue-gray-200 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
                             >
                             Make appointment
                             </Button>
