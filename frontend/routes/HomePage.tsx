@@ -98,7 +98,7 @@ function HomePage(){
                 </h1>
 
 
-                <p className="pl-6 pr-6 pb-12 md:pl-28 md:pr-28 md:text-xl text-md text-white font-semibold bg-black h-full flex items-center text-justify">
+                <p className="pl-6 pr-6 pt-12 pb-12 md:pl-28 md:pr-28 md:text-xl text-md text-white font-semibold bg-black h-full flex items-center text-justify">
 
                 Meet Lazar, your go-to expert for all things hair at Hair Barber. With a passion for the art of hair styling that's as sharp as his scissors, Lazar is a true maestro when it comes to transforming locks into works of art.
 
