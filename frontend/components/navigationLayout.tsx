@@ -21,6 +21,11 @@ function NavigationLayout() {
           </Link>
         </li>
         <li className="p-2 text-2xl text-white hover:transform hover:scale-110 hover:animate-pulse drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">
+          <Link to="/staff">
+            Staff
+          </Link>
+        </li>
+        <li className="p-2 text-2xl text-white hover:transform hover:scale-110 hover:animate-pulse drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">
           <Link to="/contact">
             Contact
           </Link>

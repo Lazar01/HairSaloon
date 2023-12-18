@@ -16,10 +16,10 @@ function HomePage(){
   };
     return(
         <div className="flex flex-col">
-            <h2 className="pt-12 text-6xl text-center text-white font-extrabold leading-none tracking-tight  md:text-9xl drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">Hair Barber</h2>
-                <div className="flex sm:flex-col md:flex-row justify-center gap-x-12 pt-24 items-center">
+            <h2 className="pt-6 text-6xl text-center text-white font-extrabold leading-none tracking-tight sm:text-6xl  md:text-8xl drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">Hair Barber</h2>
+                <div className="flex pt-6 sm:mt-12 md:mt-0   flex-col md:flex-row justify-center gap-x-12 sm:gap-y-12 md:gap-y-0 items-center">
                     <Card className="w-96">
-                        <CardHeader shadow={false} floated={false} className="h-80">
+                        <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
                             <img
                             src="../assets/homePageImg1.jpg"
                             alt="card-image"
@@ -55,7 +55,7 @@ function HomePage(){
                         </CardFooter>
                     </Card>
                     <Card className="w-96">
-                        <CardHeader shadow={false} floated={false} className="h-80">
+                        <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
                             <img
                             src="../assets/homePageImg2.jpg"
                             alt="card-image"
@@ -93,7 +93,7 @@ function HomePage(){
                     </Card>
                 </div>
                 
-                <h1 className="block font-sans pt-12 text-5xl antialiased font-semibold leading-tight tracking-normal text-inherit text-center mt-12 bg-black text-white">
+                <h1 className="block font-sans pt-12 sm:text-3xl md:text-5xl antialiased font-semibold leading-tight tracking-normal text-inherit text-center mt-12 bg-black text-white">
                  About us
                 </h1>
 
@@ -110,7 +110,7 @@ function HomePage(){
                 
                 </p>
                 <span className="bg-black flex justify-center pt-10 pb-6">
-                    <Button onClick={() => setShowModal(!showModal)} variant="outlined" color="amber" className="text-xl sm:text-sm  md:text-2xl sm:w-32 sm:h-16 md:h-24 md:w-60 ">Make an appointment</Button>
+                    <Button onClick={() => setShowModal(!showModal)} variant="outlined" color="amber" className="text-xl sm:text-sm  md:text-2xl sm:w-40 sm:h-16 md:h-24 md:w-60 ">Make an appointment</Button>
                 </span>
                 {showModal ? <Modal showModal={showModal} toggleModal={toggleModal} /> : null}
                 <Footer/>
