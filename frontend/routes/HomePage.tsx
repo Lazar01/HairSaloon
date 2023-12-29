@@ -6,7 +6,7 @@ import {
     Typography,
     Button,
   } from "@material-tailwind/react";
-  import Modal from "../components/modalDatePick"
+  import Modal from "../components/modalMakeAppointment"
   import { useState } from "react";
   import Footer from "../components/footer";
 function HomePage(){
