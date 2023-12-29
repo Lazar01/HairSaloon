@@ -5,6 +5,7 @@ import BlogPage from "../routes/BlogPage"
 import NavigationLayout from "./navigationLayout"
 import headerBackground from "../assets/barberHeaderBackground.jpg"
 import StaffPage from "../routes/Staff"
+import ServicesPage from "../routes/Services";
 function NavBar(){
     return(
         <BrowserRouter>
@@ -16,6 +17,7 @@ function NavBar(){
               <Route path="/blog" element={<BlogPage />} />  
               <Route path="/appointment" element={<BlogPage/>}/>
               <Route path="/staff" element={<StaffPage/>} />
+              <Route path="/services" element={<ServicesPage/>} />
             {/* <Route path="*" element={<NoPage />} /> */}
             </Route>       
         </Routes>

@@ -16,8 +16,8 @@ function HomePage(){
   };
     return(
         <div className="flex flex-col bg-white">
-            <h2 className="pt-6 text-6xl text-center text-black font-extrabold leading-none tracking-tight sm:text-6xl  md:text-8xl drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">Hair Barber</h2>
-                <div className="flex pt-6 sm:mt-12 md:mt-0   flex-col md:flex-row justify-center gap-x-12 sm:gap-y-12 md:gap-y-0 items-center">
+            <h2 className="pt-12 text-6xl text-center text-black font-extrabold leading-none tracking-tight sm:text-6xl  md:text-8xl drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">Hair Barber</h2>
+                <div className="flex pt-6 mt-12 flex-col md:flex-row justify-center gap-x-12 sm:gap-y-12 md:gap-y-0 items-center">
                     <Card className="w-96 bg-black">
                         <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
                             <img
