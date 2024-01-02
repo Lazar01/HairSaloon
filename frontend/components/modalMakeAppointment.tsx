@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Popover, PopoverHandler, PopoverContent } from "@material-tailwind/react";
+import { Input, Popover, PopoverHandler, PopoverContent, Select, Option } from "@material-tailwind/react";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 
@@ -69,6 +69,28 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                       />
                     </PopoverContent>
                   </Popover>
+                
+                  <div className="w-72 mt-5">
+                    <Select label="Select Time">
+                      <Option className='text-center'>09:00</Option>
+                      <Option className='text-center'>09:30</Option>
+                      <Option className='text-center'>10:00</Option>
+                      <Option className='text-center'>10:30</Option>
+                      <Option className='text-center'>11:00</Option>
+                      <Option className='text-center'>11:30</Option>
+                      <Option className='text-center'>12:00</Option>
+                      <Option className='text-center'>12:30</Option>
+                      <Option className='text-center'>13:00</Option>
+                      <Option className='text-center'>13:30</Option>
+                      <Option className='text-center'>14:00</Option>
+                      <Option className='text-center'>14:30</Option>
+                      <Option className='text-center'>15:00</Option>
+                      <Option className='text-center'>15:30</Option>
+                      <Option className='text-center'>16:00</Option>
+                      <Option className='text-center'>16:30</Option>
+                      <Option className='text-center'>17:00</Option>
+                    </Select>
+                  </div>
                 </div>
                 {/* Footer */}
                 <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
