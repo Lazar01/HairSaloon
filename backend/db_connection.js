@@ -1,12 +1,17 @@
-var mysql = require('mysql');
+function connectWithDatabase()
+{
+    var mysql = require('mysql');
 
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "yourusername",
-  password: "yourpassword"
-});
+    var con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database:"HairSaloon"
+    });
+    con.connect(function(err) {
+        if (err) throw err;
+        console.log("Connected!");
+      });
+}
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
+module.exports = {connectWithDatabase};
