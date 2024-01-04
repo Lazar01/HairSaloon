@@ -5,7 +5,7 @@ const app = express();
 
 db_connection.connectWithDatabase();
 
-app.get('/makeAppointment', (req,res)=>{
+app.get('/getAppointments', (req,res)=>{
     res.send('');
     db.query("SELECT * FROM hairsaloon.appointments",(err,data)=>{
         if(err)
