@@ -2,18 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { Input, Popover, PopoverHandler, PopoverContent, Select, Option } from "@material-tailwind/react";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
+import App from "../fetchData"
 
 interface ModalProps {
   showModal: boolean;
   toggleModal: (showModal: boolean) => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
-  const [date, setDate] = useState<Date | undefined>(undefined);
+interface Appointment {
+  AppointmentID: number;
+  Time: string;
+  Date: Date;
+  EmployeeID: number;
+  CustomerID: number;
+}
 
-  useEffect(() => {
-    // Do something when showModal changes, if needed
-  }, [showModal]);
+const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
+  const { data, loading, error } = showModal
+    ? App("http://localhost:3000/getAppointments", "GET")
+    : { data: null, loading: false, error: null };
+
+  const [alreadyReservedTimes, setReservedTimes] = useState<string[]>([]);
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const time = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"];
+  const [filteredTime, setFilteredTime] = useState<string[]>([]);
+
+    useEffect(() => {
+      if (showModal) {
+        const reservedTimes = data?.map((appointment: Appointment) => appointment.Time.split(':').slice(0, 2).join(':'));
+        setReservedTimes(reservedTimes);
+      }
+    }, [data, showModal]);
 
   const handleSaveChanges = () => {
     // Add logic to handle the save changes action
@@ -72,23 +91,10 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                 
                   <div className="w-72 mt-5">
                     <Select label="Select Time">
-                      <Option className='text-center'>09:00</Option>
-                      <Option className='text-center'>09:30</Option>
-                      <Option className='text-center'>10:00</Option>
-                      <Option className='text-center'>10:30</Option>
-                      <Option className='text-center'>11:00</Option>
-                      <Option className='text-center'>11:30</Option>
-                      <Option className='text-center'>12:00</Option>
-                      <Option className='text-center'>12:30</Option>
-                      <Option className='text-center'>13:00</Option>
-                      <Option className='text-center'>13:30</Option>
-                      <Option className='text-center'>14:00</Option>
-                      <Option className='text-center'>14:30</Option>
-                      <Option className='text-center'>15:00</Option>
-                      <Option className='text-center'>15:30</Option>
-                      <Option className='text-center'>16:00</Option>
-                      <Option className='text-center'>16:30</Option>
-                      <Option className='text-center'>17:00</Option>
+                      {filteredTime.map((time,index) => (
+                        <Option className='text-center' key={index}>{time}</Option>
+                      ))
+                      }
                     </Select>
                   </div>
                 </div>
