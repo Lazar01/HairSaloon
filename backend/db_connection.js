@@ -12,6 +12,8 @@ function connectWithDatabase()
         if (err) throw err;
         console.log("Connected!");
       });
+
+      return con;
 }
 
 module.exports = {connectWithDatabase};

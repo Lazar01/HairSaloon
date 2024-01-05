@@ -3,14 +3,17 @@ const db_connection = require('./db_connection.js');
 const express = require('express');
 const app = express();
 
-db_connection.connectWithDatabase();
+const cors = require('cors');
+app.use(cors());
+
+const db = db_connection.connectWithDatabase();
 
 app.get('/getAppointments', (req,res)=>{
-    res.send('');
     db.query("SELECT * FROM hairsaloon.appointments",(err,data)=>{
         if(err)
             res.json(err);
-        res.json(data)
+        console.log(data);
+        res.send(data);
     })
 })
 
