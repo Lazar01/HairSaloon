@@ -16,6 +16,22 @@ app.get('/getAppointments', (req,res)=>{
         res.send(data);
     })
 })
+app.get('/makeAppointment', (req,res) => {
+    const query = 'INSERT INTO appointments (Time, Date, EmployeeID, CustomerID) VALUES (?, ?, ?, ?)';
+    const values = [req.query.time, req.query.date, req.query.employeeID, req.query.customerID];
+
+    db.query(query, values, (error, results) => {
+        if (error) {
+          // Handle the error appropriately
+          console.error(error);
+          res.status(500).send('Error inserting appointment');
+        } else {
+          // Handle the success case
+          console.log('Appointment inserted successfully');
+          res.status(200).send('Appointment inserted successfully');
+        }
+    })
+})
 
 const port = process.env.PORT || 3000;
 
