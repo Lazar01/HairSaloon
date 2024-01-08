@@ -16,7 +16,7 @@ app.get('/getAppointments', (req,res)=>{
         res.send(data);
     })
 })
-app.get('/makeAppointment', (req,res) => {
+app.post('/makeAppointment', (req,res) => {
     const query = 'INSERT INTO appointments (Time, Date, EmployeeID, CustomerID) VALUES (?, ?, ?, ?)';
     const values = [req.query.time, req.query.date, req.query.employeeID, req.query.customerID];
 
@@ -32,6 +32,8 @@ app.get('/makeAppointment', (req,res) => {
         }
     })
 })
+
+
 
 const port = process.env.PORT || 3000;
 
