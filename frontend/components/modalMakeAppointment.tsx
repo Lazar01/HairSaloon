@@ -28,17 +28,18 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
   const [filteredTime, setFilteredTime] = useState<string[]>([]);
 
     useEffect(() => {
-      if (showModal) {
+      if (showModal && data) {
         const reservedTimes = data?.map((appointment: Appointment) => appointment.Time.split(':').slice(0, 2).join(':'));
         setReservedTimes(reservedTimes);
       }
     }, [data, showModal]);
 
+    useEffect(()=>{
+      if(showModal)
+        setFilteredTime(time.filter(item=> !alreadyReservedTimes.includes(item)));
+    }, [showModal, alreadyReservedTimes])
   const handleSaveChanges = () => {
-    // Add logic to handle the save changes action
-    // ...
-
-    // Close the modal after handling the action
+    
     toggleModal(false);
   };
 
