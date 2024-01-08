@@ -33,6 +33,21 @@ app.post('/makeAppointment', (req,res) => {
     })
 })
 
+app.get('/getAllEmployees', (req,res)=>{
+    const query = "SELECT * FROM employees";
+
+    db.query(query,(err,result)=>{
+        if(error){
+            console.log(err);
+            res.status(500).send('Error getting all the employees');
+        }
+        else{
+            console.log('Emloyees retrieved successfully');
+            res.status(200).send('Emloyees retrieved successfully');
+        }
+    })
+})
+
 
 
 const port = process.env.PORT || 3000;
