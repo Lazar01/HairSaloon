@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Input, Popover, PopoverHandler, PopoverContent, Select, Option } from "@material-tailwind/react";
+import React, { useState, useEffect, FormEvent } from 'react';
+import { Input, Popover, PopoverHandler, PopoverContent, Select, Option, Card, CardHeader, CardBody, Typography } from "@material-tailwind/react";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
-import App from "../fetchData"
+import {getAppointments} from "../fetchData";
+import { useLazyAxios } from 'use-axios-client';
 
 interface ModalProps {
   showModal: boolean;
@@ -17,36 +18,73 @@ interface Appointment {
   CustomerID: number;
 }
 
+interface Employee {
+  EmployeeID: number;
+  Name: string;
+  Addres: string;
+  Image?: string;
+}
+
 const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
-  const { data, loading, error } = showModal
-    ? App("http://localhost:3000/getAppointments", "GET")
-    : { data: null, loading: false, error: null };
+   
+  const { data, loading, error } =  getAppointments()
+
+  const [getData, { data: makeAppointmentData, error: makeAppointmentError, loading: makeAppointmentLoading }] = useLazyAxios({
+    url: 'http://localhost:3000/makeAppointment',
+    method:"POST",
+  });
+  //const getData = (reqData:any) => makeAppointment();
 
   const [alreadyReservedTimes, setReservedTimes] = useState<string[]>([]);
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [date, setDate] = useState<Date|undefined>(undefined);
+  const [chosenDate, setChosenDate] = useState("");
+  const [chosenTime, setChosenTime] = useState("");
+  const [chosenEmployee, setChosenEmployee] = useState(0);
   const time = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"];
   const [filteredTime, setFilteredTime] = useState<string[]>([]);
+  const [employees, setEmployees] = useState<[]>([]);
+  const [appointmentData,setAppointmentData] = useState({});
 
     useEffect(() => {
       if (showModal && data) {
-        const reservedTimes = data?.map((appointment: Appointment) => appointment.Time.split(':').slice(0, 2).join(':'));
+        const reservedTimes = data[0]?.map((appointment: Appointment) => appointment.Time.split(':').slice(0, 2).join(':'));
+        setEmployees(data[1]?.map((employee: Employee) => employee))
         setReservedTimes(reservedTimes);
       }
-    }, [data, showModal]);
+    }, [showModal, data]);
 
-    useEffect(()=>{
-      if(showModal)
+    useEffect(()=>{   
+      if(data)
         setFilteredTime(time.filter(item=> !alreadyReservedTimes.includes(item)));
-    }, [showModal, alreadyReservedTimes])
-  const handleSaveChanges = () => {
-    
-    toggleModal(false);
-  };
+    }, [showModal, data])
+
+
+    const handleSaveChanges = (e : FormEvent) => {
+      e.preventDefault();
+      const newAppointmentData = {
+        // Add your appointment data here
+        time: chosenTime,
+        date: chosenDate,
+        employeeID: chosenEmployee,
+        customerID: 1,
+      };
+      setAppointmentData(newAppointmentData);
+    };
+    useEffect(()=>{
+      getData(appointmentData);
+      toggleModal(false);
+    },[appointmentData])
+
+
+
+
+
 
   return (
     <>
       {showModal ? (
         <>
+        <form onSubmit={(e)=>handleSaveChanges(e)}>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed z-20 inset-0 outline-none focus:outline-none">
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
               {/* Content */}
@@ -68,13 +106,31 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                 {/* Body */}
                 <div className="relative p-6 flex-auto
                 ">
+                  {employees.map((employee:Employee,index) => (
+                  <Card className={`w-40 bg-white mb-8 ${chosenEmployee === employee.EmployeeID ? 'border-2 border-blue-500' : 'border-2 border-gray-300'}`} key={index} onClick={() => {setChosenEmployee(employee.EmployeeID);}}>
+                        <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
+                        <img
+                          src={employee.Image ? employee.Image : "../assets/homePageImg1.jpg"}
+                          alt="card-image"
+                          className="h-full w-full object-cover"
+                        />
+                        </CardHeader>
+                        <CardBody>
+                            <div className="mb-2 text-center">
+                            <Typography color="black" className="font-medium">
+                              {employee.Name}
+                            </Typography>
+                            </div>
+                        </CardBody>
+                    </Card>
+                    ))}
                   {/* Date Picker */}
                   <Popover placement="bottom">
                     <PopoverHandler>
                       <Input
                         label="Select a Date"
                         onChange={() => null}
-                        value={date ? format(date, "PPP") : ""}
+                        value={date ? format(date, "yyyy-MM-dd") : ""}
                         crossOrigin={""}
                       />
                     </PopoverHandler>
@@ -82,7 +138,9 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                       <DayPicker
                         mode="single"
                         selected={date}
-                        onSelect={setDate}
+                        onSelect={(selectedDate) => {const formattedDate = selectedDate ? format(selectedDate, "yyyy-MM-dd") : null;
+                        setChosenDate(formattedDate? formattedDate: "");
+                        setDate(selectedDate);}}
                         showOutsideDays
                         className="border-0"
                         // ... (other configurations)
@@ -91,12 +149,13 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                   </Popover>
                 
                   <div className="w-72 mt-5">
-                    <Select label="Select Time">
-                      {filteredTime.map((time,index) => (
-                        <Option className='text-center' key={index}>{time}</Option>
-                      ))
-                      }
-                    </Select>
+                  <Select label="Select Time" onChange={(time) => setChosenTime(time || "")}>
+                    {filteredTime.map((time, index) => (
+                      <Option className='text-center' key={index} value={time}>
+                        {time}
+                      </Option>
+                    ))}
+                  </Select>
                   </div>
                 </div>
                 {/* Footer */}
@@ -110,8 +169,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                   </button>
                   <button
                     className="text-black hover:bg-black hover:text-white active:bg-blue-gray-900 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={handleSaveChanges}
+                    type="submit"
                   >
                     Save Changes
                   </button>
@@ -120,6 +178,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
             </div>
           </div>
           <div className="opacity-25 fixed inset-0 z-10 bg-black"></div>
+          </form>
         </>
       ) : null}
     </>
