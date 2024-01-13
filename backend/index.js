@@ -2,23 +2,37 @@ const db_connection = require('./db_connection.js');
 
 const express = require('express');
 const app = express();
+app.use(express.json());
 
 const cors = require('cors');
 app.use(cors());
 
+const util = require('util');
+const promisify = util.promisify;
+
+
 const db = db_connection.connectWithDatabase();
 
-app.get('/getAppointments', (req,res)=>{
-    db.query("SELECT * FROM hairsaloon.appointments",(err,data)=>{
-        if(err)
-            res.json(err);
-        console.log(data);
-        res.send(data);
-    })
-})
+app.get('/getAppointments', async (req, res) => {
+    try {
+        const appointmentsQuery = promisify(db.query).bind(db);
+        
+        const appointmentsData = await appointmentsQuery("SELECT * FROM hairsaloon.appointments");
+
+        const employeesData = await appointmentsQuery("SELECT * FROM employee");
+
+        const responseData = [appointmentsData, employeesData];
+        console.log(responseData);
+        res.status(200).json(responseData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+
 app.post('/makeAppointment', (req,res) => {
     const query = 'INSERT INTO appointments (Time, Date, EmployeeID, CustomerID) VALUES (?, ?, ?, ?)';
-    const values = [req.query.time, req.query.date, req.query.employeeID, req.query.customerID];
+    const values = [req.body.time, req.body.date, req.body.employeeID, req.body.customerID];
 
     db.query(query, values, (error, results) => {
         if (error) {
