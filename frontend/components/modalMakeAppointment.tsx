@@ -44,6 +44,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
   const [filteredTime, setFilteredTime] = useState<string[]>([]);
   const [employees, setEmployees] = useState<[]>([]);
   const [appointmentData,setAppointmentData] = useState({});
+  const [isMakingAppointment, setIsMakingAppointment] = useState(false);
 
     useEffect(() => {
       if (showModal && data) {
@@ -68,11 +69,17 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
         employeeID: chosenEmployee,
         customerID: 1,
       };
+      setIsMakingAppointment(true);
       setAppointmentData(newAppointmentData);
     };
     useEffect(()=>{
-      getData(appointmentData);
-      toggleModal(false);
+      if(isMakingAppointment)
+      {
+        getData(appointmentData);
+        
+        setTimeout(() => {toggleModal(showModal)}, 2000);
+      }
+
     },[appointmentData])
 
 
