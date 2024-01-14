@@ -15,14 +15,9 @@ const db = db_connection.connectWithDatabase();
 
 app.get('/getAppointments', async (req, res) => {
     try {
-        const appointmentsQuery = promisify(db.query).bind(db);
-        
-        const appointmentsData = await appointmentsQuery("SELECT * FROM hairsaloon.appointments");
+        const appointmentsData = await appointmentsQuery("SELECT * FROM hairsaloon.appointments WHERE Date =" , req.body.date , " AND Time != " , req.body.time);
 
-        const employeesData = await appointmentsQuery("SELECT * FROM employee");
-
-        const responseData = [appointmentsData, employeesData];
-        console.log(responseData);
+        const responseData = appointmentsData;  
         res.status(200).json(responseData);
     } catch (error) {
         console.error(error);
