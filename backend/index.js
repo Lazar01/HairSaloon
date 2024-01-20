@@ -52,7 +52,7 @@ app.get('/getAllEmployees', (req,res)=>{
         }
         else{
             console.log('Emloyees retrieved successfully');
-            res.status(200).send('Emloyees retrieved successfully');
+            res.status(200).json(query);
         }
     })
 })
