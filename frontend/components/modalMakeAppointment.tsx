@@ -2,7 +2,7 @@ import React, { useState, useEffect, FormEvent } from 'react';
 import { Input, Popover, PopoverHandler, PopoverContent, Select, Option, Card, CardHeader, CardBody, Typography } from "@material-tailwind/react";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
-import {getAppointments} from "../fetchData";
+import {getAllEmployees} from "../fetchData";
 import { useLazyAxios } from 'use-axios-client';
 
 interface ModalProps {
@@ -27,11 +27,16 @@ interface Employee {
 
 const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
    
-  const { data, loading, error } =  getAppointments()
+  const { data: AllEmployeesData, loading: EmployeesLoadin, error: AllEmployeesError } =  getAllEmployees()
 
-  const [getData, { data: makeAppointmentData, error: makeAppointmentError, loading: makeAppointmentLoading }] = useLazyAxios({
+  const [makeAppointment, { data: makeAppointmentData, error: makeAppointmentError, loading: makeAppointmentLoading }] = useLazyAxios({
     url: 'http://localhost:3000/makeAppointment',
     method:"POST",
+  });
+
+  const [getAppointments, { data: getAppointmentData, error: getAppointmentDataError, loading: getAppointmentDataLoading }] = useLazyAxios({
+    url: 'http://localhost:3000/makeAppointment',
+    method:"GET",
   });
   //const getData = (reqData:any) => makeAppointment();
 
@@ -47,17 +52,18 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
   const [isMakingAppointment, setIsMakingAppointment] = useState(false);
 
     useEffect(() => {
-      if (showModal && data) {
-        const reservedTimes = data[0]?.map((appointment: Appointment) => appointment.Time.split(':').slice(0, 2).join(':'));
-        setEmployees(data[1]?.map((employee: Employee) => employee))
+      if (showModal && AllEmployeesData) {
+        setChosenEmployee(AllEmployeesData[0].employeeID);
+        const reservedTimes = AllEmployeesData[0]?.map((appointment: Appointment) => appointment.Time.split(':').slice(0, 2).join(':'));
+        setEmployees(AllEmployeesData[1]?.map((employee: Employee) => employee))
         setReservedTimes(reservedTimes);
       }
-    }, [showModal, data]);
+    }, [showModal, AllEmployeesData]);
 
     useEffect(()=>{   
-      if(data)
+      if(AllEmployeesData)
         setFilteredTime(time.filter(item=> !alreadyReservedTimes.includes(item)));
-    }, [showModal, data])
+    }, [showModal, AllEmployeesData])
 
 
     const handleSaveChanges = (e : FormEvent) => {
@@ -75,13 +81,17 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
     useEffect(()=>{
       if(isMakingAppointment)
       {
-        getData(appointmentData);
-        
+        makeAppointment(appointmentData);
         setTimeout(() => {toggleModal(showModal)}, 2000);
       }
 
     },[appointmentData])
 
+    function handleChosenEmployee(employeeID: any){
+      setChosenEmployee(employeeID)
+      getAppointments({})
+
+    }
 
 
 
@@ -114,7 +124,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                 <div className="relative p-6 flex-auto
                 ">
                   {employees.map((employee:Employee,index) => (
-                  <Card className={`w-40 bg-white mb-8 ${chosenEmployee === employee.EmployeeID ? 'border-2 border-blue-500' : 'border-2 border-gray-300'}`} key={index} onClick={() => {setChosenEmployee(employee.EmployeeID);}}>
+                  <Card className={`w-40 bg-white mb-8 ${chosenEmployee === employee.EmployeeID ? 'border-2 border-blue-500' : 'border-2 border-gray-300'}`} key={index} onClick={() => handleChosenEmployee(employee.EmployeeID)}>
                         <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
                         <img
                           src={employee.Image ? employee.Image : "../assets/homePageImg1.jpg"}
