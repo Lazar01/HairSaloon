@@ -15,8 +15,8 @@ const db = db_connection.connectWithDatabase();
 
 app.get('/getAppointments', async (req, res) => {
     try {
-        const query = `SELECT * FROM appointments`;
-        const values = [req.body.date, req.body.time];
+        const query = `SELECT * FROM appointments WHERE EmployeeID = ? AND Date = ?`;
+        const values = [req.body.EmployeeID, req.body.Date];
         const appointmentsData = await db.query(query,values,(req,result)=>{
             const responseData = result;
             res.status(200).send(responseData);
