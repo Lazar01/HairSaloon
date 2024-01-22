@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import {getAllEmployees} from "../fetchData";
 import { useLazyAxios } from 'use-axios-client';
-
+import { Carousel } from "@material-tailwind/react";
 interface ModalProps {
   showModal: boolean;
   toggleModal: (showModal: boolean) => void;
@@ -41,29 +41,30 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
   //const getData = (reqData:any) => makeAppointment();
 
   const [alreadyReservedTimes, setReservedTimes] = useState<string[]>([]);
-  const [date, setDate] = useState<Date|undefined>(undefined);
-  const [chosenDate, setChosenDate] = useState("");
+  const [date, setDate] = useState<Date|undefined>(new Date());
+  const [chosenDate, setChosenDate] = useState(new Date().toDateString());
   const [chosenTime, setChosenTime] = useState("");
   const [chosenEmployee, setChosenEmployee] = useState(0);
   const time = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"];
   const [filteredTime, setFilteredTime] = useState<string[]>([]);
+  const [isEmployeeSelected,setIsEmployeeSelected] = useState(false); 
   const [employees, setEmployees] = useState<[]>([]);
   const [appointmentData,setAppointmentData] = useState({});
   const [isMakingAppointment, setIsMakingAppointment] = useState(false);
 
     useEffect(() => {
       if (showModal && AllEmployeesData) {
-        setChosenEmployee(AllEmployeesData[0].employeeID);
-        const reservedTimes = AllEmployeesData[0]?.map((appointment: Appointment) => appointment.Time.split(':').slice(0, 2).join(':'));
-        setEmployees(AllEmployeesData[1]?.map((employee: Employee) => employee))
-        setReservedTimes(reservedTimes);
+        setChosenEmployee(AllEmployeesData[0].EmployeeID);
+        //const reservedTimes = AllEmployeesData[0]?.map((appointment: Appointment) => appointment.Time.split(':').slice(0, 2).join(':'));
+        setEmployees(AllEmployeesData?.map((employee: Employee) => employee))
+        //setReservedTimes(reservedTimes);
       }
     }, [showModal, AllEmployeesData]);
 
-    useEffect(()=>{   
-      if(AllEmployeesData)
-        setFilteredTime(time.filter(item=> !alreadyReservedTimes.includes(item)));
-    }, [showModal, AllEmployeesData])
+    // useEffect(()=>{   
+    //   if(AllEmployeesData)
+    //     setFilteredTime(time.filter(item=> !alreadyReservedTimes.includes(item)));
+    // }, [showModal, AllEmployeesData])
 
 
     const handleSaveChanges = (e : FormEvent) => {
@@ -86,6 +87,14 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
       }
 
     },[appointmentData])
+
+    useEffect(()=>{
+      if(chosenEmployee)
+      {
+        getAppointments()
+      }
+
+    },[chosenEmployee])
 
     function handleChosenEmployee(employeeID: any){
       setChosenEmployee(employeeID)
@@ -123,6 +132,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                 {/* Body */}
                 <div className="relative p-6 flex-auto
                 ">
+                  {/*All the employees */}
                   {employees.map((employee:Employee,index) => (
                   <Card className={`w-40 bg-white mb-8 ${chosenEmployee === employee.EmployeeID ? 'border-2 border-blue-500' : 'border-2 border-gray-300'}`} key={index} onClick={() => handleChosenEmployee(employee.EmployeeID)}>
                         <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
@@ -160,6 +170,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                         setDate(selectedDate);}}
                         showOutsideDays
                         className="border-0"
+                        fromDate={new Date()}
                         // ... (other configurations)
                       />
                     </PopoverContent>
@@ -167,11 +178,16 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                 
                   <div className="w-72 mt-5">
                   <Select label="Select Time" onChange={(time) => setChosenTime(time || "")}>
-                    {filteredTime.map((time, index) => (
+                    {!isEmployeeSelected?time.map((time, index) => (
                       <Option className='text-center' key={index} value={time}>
                         {time}
                       </Option>
-                    ))}
+                    )):
+                    filteredTime.map((time, index) => (
+                      <Option className='text-center' key={index} value={time}>
+                        {time}
+                      </Option>
+                      ))}
                   </Select>
                   </div>
                 </div>
