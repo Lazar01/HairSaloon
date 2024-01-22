@@ -15,10 +15,12 @@ const db = db_connection.connectWithDatabase();
 
 app.get('/getAppointments', async (req, res) => {
     try {
-        const appointmentsData = await appointmentsQuery("SELECT * FROM hairsaloon.appointments WHERE Date =" , req.body.date , " AND Time != " , req.body.time);
-
-        const responseData = appointmentsData;  
-        res.status(200).json(responseData);
+        const query = `SELECT * FROM appointments`;
+        const values = [req.body.date, req.body.time];
+        const appointmentsData = await db.query(query,values,(req,result)=>{
+            const responseData = result;
+            res.status(200).send(responseData);
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send(error);
@@ -31,11 +33,9 @@ app.post('/makeAppointment', (req,res) => {
 
     db.query(query, values, (error, results) => {
         if (error) {
-          // Handle the error appropriately
           console.error(error);
           res.status(500).send('Error inserting appointment');
         } else {
-          // Handle the success case
           console.log('Appointment inserted successfully');
           res.status(200).send('Appointment inserted successfully');
         }
@@ -43,16 +43,16 @@ app.post('/makeAppointment', (req,res) => {
 })
 
 app.get('/getAllEmployees', (req,res)=>{
-    const query = "SELECT * FROM employees";
+    const query = "SELECT * FROM employee";
 
     db.query(query,(err,result)=>{
-        if(error){
+        if(err){
             console.log(err);
             res.status(500).send('Error getting all the employees');
         }
         else{
             console.log('Emloyees retrieved successfully');
-            res.status(200).json(query);
+            res.status(200).json(result);
         }
     })
 })
