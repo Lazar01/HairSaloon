@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import {getAllEmployees} from "../fetchData";
 import { useLazyAxios } from 'use-axios-client';
-import { Carousel } from "@material-tailwind/react";
+import { Carousel, IconButton } from "@material-tailwind/react";
 interface ModalProps {
   showModal: boolean;
   toggleModal: (showModal: boolean) => void;
@@ -34,15 +34,8 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
     method:"POST",
   });
 
-  const [getAppointments, { data: getAppointmentData, error: getAppointmentDataError, loading: getAppointmentDataLoading }] = useLazyAxios({
-    url: 'http://localhost:3000/makeAppointment',
-    method:"GET",
-  });
-  //const getData = (reqData:any) => makeAppointment();
-
-  const [alreadyReservedTimes, setReservedTimes] = useState<string[]>([]);
-  const [date, setDate] = useState<Date|undefined>(new Date());
-  const [chosenDate, setChosenDate] = useState(new Date().toDateString());
+  const [date, setDate] = useState(new Date());
+  const [chosenDate, setChosenDate] = useState(format(date, "yyyy-MM-dd"));
   const [chosenTime, setChosenTime] = useState("");
   const [chosenEmployee, setChosenEmployee] = useState(0);
   const time = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"];
@@ -55,16 +48,15 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
     useEffect(() => {
       if (showModal && AllEmployeesData) {
         setChosenEmployee(AllEmployeesData[0].EmployeeID);
-        //const reservedTimes = AllEmployeesData[0]?.map((appointment: Appointment) => appointment.Time.split(':').slice(0, 2).join(':'));
         setEmployees(AllEmployeesData?.map((employee: Employee) => employee))
-        //setReservedTimes(reservedTimes);
       }
     }, [showModal, AllEmployeesData]);
 
-    // useEffect(()=>{   
-    //   if(AllEmployeesData)
-    //     setFilteredTime(time.filter(item=> !alreadyReservedTimes.includes(item)));
-    // }, [showModal, AllEmployeesData])
+    const [getAppointments, { data: getAppointmentData, error: getAppointmentDataError, loading: getAppointmentDataLoading }] = useLazyAxios({
+      url: 'http://localhost:3000/getAppointments',
+      method:"GET",
+      params: {EmployeeID:chosenEmployee, Date: chosenDate},
+    });
 
 
     const handleSaveChanges = (e : FormEvent) => {
@@ -91,16 +83,18 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
     useEffect(()=>{
       if(chosenEmployee)
       {
-        getAppointments()
+        getAppointments();
+       
       }
-
-    },[chosenEmployee])
-
-    function handleChosenEmployee(employeeID: any){
-      setChosenEmployee(employeeID)
-      getAppointments({})
-
-    }
+    },[chosenEmployee]);
+    useEffect(()=>{
+      if(getAppointmentData)
+      {
+        setFilteredTime(getAppointmentData as []);
+        setIsEmployeeSelected(true);
+      }
+      
+    },[getAppointmentData]);
 
 
 
@@ -133,8 +127,61 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                 <div className="relative p-6 flex-auto
                 ">
                   {/*All the employees */}
+                  <Carousel className='mb-8'
+                    prevArrow={({ handlePrev, activeIndex }) => {
+                    useEffect(()=>{
+                      setChosenEmployee(activeIndex+1);
+                    },[activeIndex]);
+                    
+                    
+                    return(  
+                    <IconButton
+                      variant="text"
+                      size="lg"
+                      onClick={handlePrev}
+                      className="!absolute bottom-0 left-4 -translate-y-2/4"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        stroke="currentColor"
+                        className="h-6 w-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                        />
+                      </svg>
+                    </IconButton>
+                  )}}
+                  nextArrow={({ handleNext }) => (
+                    <IconButton
+                      variant="text"
+                      size="lg"
+                      onClick={handleNext}
+                      className="!absolute bottom-0 !right-4 -translate-y-2/4"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        stroke="currentColor"
+                        className="h-6 w-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                        />
+                      </svg>
+                    </IconButton>
+                  )} >
                   {employees.map((employee:Employee,index) => (
-                  <Card className={`w-40 bg-white mb-8 ${chosenEmployee === employee.EmployeeID ? 'border-2 border-blue-500' : 'border-2 border-gray-300'}`} key={index} onClick={() => handleChosenEmployee(employee.EmployeeID)}>
+                  <Card key={index}>
                         <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
                         <img
                           src={employee.Image ? employee.Image : "../assets/homePageImg1.jpg"}
@@ -151,6 +198,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                         </CardBody>
                     </Card>
                     ))}
+                    </Carousel>
                   {/* Date Picker */}
                   <Popover placement="bottom">
                     <PopoverHandler>
@@ -159,6 +207,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                         onChange={() => null}
                         value={date ? format(date, "yyyy-MM-dd") : ""}
                         crossOrigin={""}
+                        required
                       />
                     </PopoverHandler>
                     <PopoverContent className="z-50">
@@ -167,15 +216,14 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                         selected={date}
                         onSelect={(selectedDate) => {const formattedDate = selectedDate ? format(selectedDate, "yyyy-MM-dd") : null;
                         setChosenDate(formattedDate? formattedDate: "");
-                        setDate(selectedDate);}}
+                        setDate(selectedDate as Date);}}
                         showOutsideDays
                         className="border-0"
                         fromDate={new Date()}
-                        // ... (other configurations)
                       />
                     </PopoverContent>
                   </Popover>
-                
+                {/* Time Picker */}
                   <div className="w-72 mt-5">
                   <Select label="Select Time" onChange={(time) => setChosenTime(time || "")}>
                     {!isEmployeeSelected?time.map((time, index) => (
