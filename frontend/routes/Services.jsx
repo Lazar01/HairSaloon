@@ -1,6 +1,7 @@
 import React from "react";
 import ServiceCard from "../components/serviceCard"
 import Footer from "../components/footer";
+import { FaScissors } from "react-icons/fa6";
 const Service = () => {
   return (
     <>
@@ -22,15 +23,17 @@ const Service = () => {
 
         <div className="-mx-4 flex flex-wrap">
           <ServiceCard
-            title="Refreshing Design"
+            icon={<img src="../assets/service1.jpg" className="justify-center rounded-2xl w-20 h-32 sm:w-32 sm:h-52 md:w-60 md:h-72 "/>}
+            title="Fresh Cuts"
             details="We dejoy working with discerning clients, people for whom qualuty, service, integrity & aesthetics."
           />
           <ServiceCard
-            title="Based on Tailwind CSS"
+          icon={<img src="../assets/service2.jpg" className="justify-center rounded-2xl w-20 h-32 sm:w-32 sm:h-52 md:w-60 md:h-72"/>}
+            title="Unique barber styles"
             details="We dejoy working with discerning clients, people for whom qualuty, service, integrity & aesthetics."
           />
           <ServiceCard
-            title="100+ Components"
+            title="Anything that comes to your mind..."
             details="We dejoy working with discerning clients, people for whom qualuty, service, integrity & aesthetics."
           />
           <ServiceCard

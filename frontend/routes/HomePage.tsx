@@ -145,8 +145,8 @@ function HomePage(){
                 Beyond his technical prowess, Lazar is known for his warm and welcoming demeanor.
                 
                 </p>
-                <span className="bg-black flex justify-center pt-10 pb-6">
-                    <Button onClick={() => setShowModal(!showModal)} variant="outlined" color="amber" className="text-xl sm:text-sm  md:text-2xl sm:w-40 sm:h-16 md:h-24 md:w-60 ">Make an appointment</Button>
+                <span className="flex justify-center pt-10 pb-6">
+                    <Button onClick={() => setShowModal(!showModal)} variant="filled" color="amber" className="text-xl sm:text-sm  md:text-2xl sm:w-40 sm:h-16 md:h-24 md:w-60 ">Make an appointment</Button>
                 </span>
                 {showModal ? <Modal showModal={showModal} toggleModal={toggleModal} /> : null}
                 <Footer/>
