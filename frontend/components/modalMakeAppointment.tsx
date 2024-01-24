@@ -29,7 +29,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
    
   const { data: AllEmployeesData, loading: EmployeesLoadin, error: AllEmployeesError } =  getAllEmployees()
 
-  const [makeAppointment, { data: makeAppointmentData, error: makeAppointmentError, loading: makeAppointmentLoading }] = useLazyAxios({
+  const [makeAppointment, { data: makeAppointmentResponse, error: makeAppointmentError, loading: makeAppointmentLoading }] = useLazyAxios({
     url: 'http://localhost:3000/makeAppointment',
     method:"POST",
   });
@@ -45,6 +45,8 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
   const [appointmentData,setAppointmentData] = useState({});
   const [isMakingAppointment, setIsMakingAppointment] = useState(false);
 
+
+    //
     useEffect(() => {
       if (showModal && AllEmployeesData) {
         setChosenEmployee(AllEmployeesData[0].EmployeeID);
@@ -71,22 +73,24 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
       setIsMakingAppointment(true);
       setAppointmentData(newAppointmentData);
     };
+    //If the appointment is being made fetch the data
     useEffect(()=>{
       if(isMakingAppointment)
-      {
         makeAppointment(appointmentData);
-        setTimeout(() => {toggleModal(showModal)}, 2000);
-      }
 
     },[appointmentData])
-
+    //When an appointmend is made, if the answer from be is success close the modal
+    useEffect(()=>{
+      if(makeAppointmentResponse == "success")
+          setTimeout(() => {toggleModal(showModal)}, 2000);
+        
+    },[makeAppointmentResponse])
+    //Gettin appointments from backend when employee is chosen/changed
     useEffect(()=>{
       if(chosenEmployee)
-      {
         getAppointments();
-       
-      }
     },[chosenEmployee]);
+    //Setting the available time
     useEffect(()=>{
       if(getAppointmentData)
       {
@@ -207,7 +211,6 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                         onChange={() => null}
                         value={date ? format(date, "yyyy-MM-dd") : ""}
                         crossOrigin={""}
-                        required
                       />
                     </PopoverHandler>
                     <PopoverContent className="z-50">
@@ -220,12 +223,14 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                         showOutsideDays
                         className="border-0"
                         fromDate={new Date()}
+                        required
+                        footer={makeAppointmentResponse === "date"}                      
                       />
                     </PopoverContent>
                   </Popover>
                 {/* Time Picker */}
                   <div className="w-72 mt-5">
-                  <Select label="Select Time" onChange={(time) => setChosenTime(time || "")}>
+                  <Select error={makeAppointmentResponse === "time"} label="Select Time" onChange={(time) => setChosenTime(time || "")}>
                     {!isEmployeeSelected?time.map((time, index) => (
                       <Option className='text-center' key={index} value={time}>
                         {time}
@@ -237,6 +242,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                       </Option>
                       ))}
                   </Select>
+                  {makeAppointmentResponse === "time" && <Typography variant='small'>Please choose time for your appointment</Typography>}
                   </div>
                 </div>
                 {/* Footer */}
