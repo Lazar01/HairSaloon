@@ -23,12 +23,12 @@ const Service = () => {
 
         <div className="-mx-4 flex flex-wrap">
           <ServiceCard
-            icon={<img src="../assets/service1.jpg" className="justify-center rounded-2xl w-20 h-32 sm:w-32 sm:h-52 md:w-60 md:h-72 "/>}
+            icon={<img src="../assets/service1.jpg" className="rounded-2xl sm:w-80 sm:h-max md:w-60 md:h-72 "/>}
             title="Fresh Cuts"
             details="We dejoy working with discerning clients, people for whom qualuty, service, integrity & aesthetics."
           />
           <ServiceCard
-          icon={<img src="../assets/service2.jpg" className="justify-center rounded-2xl w-20 h-32 sm:w-32 sm:h-52 md:w-60 md:h-72"/>}
+          icon={<img src="../assets/service2.jpg" className="rounded-2xl sm:w-80 sm:h-max md:w-60 md:h-72"/>}
             title="Unique barber styles"
             details="We dejoy working with discerning clients, people for whom qualuty, service, integrity & aesthetics."
           />
