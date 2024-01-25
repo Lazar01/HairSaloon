@@ -1,7 +1,5 @@
-import React from "react";
 import ServiceCard from "../components/serviceCard"
 import Footer from "../components/footer";
-import { FaScissors } from "react-icons/fa6";
 const Service = () => {
   return (
     <>
