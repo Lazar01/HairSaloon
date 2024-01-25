@@ -6,10 +6,13 @@ module.exports = withMT({
     "./src/**/*.{js,ts,jsx,tsx,html}",
     "./routes/**/*.{js,ts,jsx,tsx}",  
     "./components/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.{js,ts,jxs,tsx}"
   ],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin')
+  ],
 });
 
