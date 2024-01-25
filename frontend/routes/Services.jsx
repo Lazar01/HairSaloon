@@ -1,3 +1,4 @@
+import React from "react";
 import ServiceCard from "../components/serviceCard"
 import Footer from "../components/footer";
 const Service = () => {
