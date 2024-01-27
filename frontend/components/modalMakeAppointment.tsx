@@ -33,7 +33,8 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
     url: 'http://localhost:3000/makeAppointment',
     method:"POST",
   });
-
+  
+  const imgPath="../assets/BarbersImages/";
   const [date, setDate] = useState(new Date());
   const [chosenDate, setChosenDate] = useState(format(date, "yyyy-MM-dd"));
   const [chosenTime, setChosenTime] = useState("");
@@ -50,7 +51,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
     useEffect(() => {
       if (showModal && AllEmployeesData) {
         setChosenEmployee(AllEmployeesData[0].EmployeeID);
-        setEmployees(AllEmployeesData?.map((employee: Employee) => employee))
+        setEmployees(AllEmployeesData?.map((employee: Employee) => employee))      
       }
     }, [showModal, AllEmployeesData]);
 
@@ -188,7 +189,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                   <Card key={index}>
                         <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
                         <img
-                          src={employee.Image ? employee.Image : "../assets/homePageImg1.jpg"}
+                          src={employee.Image ? `${imgPath + employee.Image}` : "../assets/homePageImg1.jpg"}
                           alt="card-image"
                           className="h-full w-full object-cover"
                         />
@@ -260,6 +261,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
                   >
                     Save Changes
                   </button>
+                  {makeAppointmentResponse==="success" && <span className='bg-light-green-800 text-white text-lg flex-grow text-center rounded-2xl'>Successfuly made an appointment</span>}                 
                 </div>
               </div>
             </div>
