@@ -15,7 +15,6 @@ function NavBar(){
               <Route index element={<HomePage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/blog" element={<BlogPage />} />  
-              <Route path="/appointment" element={<BlogPage/>}/>
               <Route path="/staff" element={<StaffPage/>} />
               <Route path="/services" element={<ServicesPage/>} />
             {/* <Route path="*" element={<NoPage />} /> */}
