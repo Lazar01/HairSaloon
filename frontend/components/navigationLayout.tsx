@@ -2,12 +2,14 @@ import { Outlet, Link } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IconButton } from "@material-tailwind/react";
 import { useState } from "react";
+import headerBackground from "../assets/barberHeaderBackground.jpg"
 
 function NavigationLayout() {
   const [isMenuOpen,setMenuOpen] = useState(false);
   return (
     <>
     <nav className="bg-black bg-opacity-75 flex justify-between">
+    <img src={headerBackground} className="absolute left-0 right-0 top-0 bottom-0 -z-50 w-auto h-auto"/>
     <Link to="/" className="mt-auto mb-auto pl-12 flex md:h-24 sm:h-12 items-center justify-center text-white font-extrabold leading-none tracking-tight  md:text-2xl drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)] basis-2/12">
       <div className="">Barber Saloon   
         <img className="sm:h-6 md:h-10 ml-auto mr-auto" src="../assets/Logo.png"></img>  
