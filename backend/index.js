@@ -76,6 +76,20 @@ app.get('/getAllEmployees', (req,res)=>{
     })
 })
 
+app.get('/getAllServices', (req,res)=>{
+    const query = "SELECT * FROM services";
+    console.log("Usao")
+    db.query(query,(err,result)=>{
+        if(err){
+            console.log(err);
+            res.status(500).send('Error getting all the services');
+        }
+        else{
+            console.log('Services retrieved successfully');
+            res.status(200).json(result);
+        }
+    })
+})
 
 
 const port = process.env.PORT || 3000;
