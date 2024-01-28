@@ -8,3 +8,11 @@ export function getAllEmployees() {
   });
   return { data, error, loading };
 }
+
+export function getAllServices() {
+  const { data, error, loading } = useAxios({
+    url: "http://localhost:3000/getAllServices",
+    method: "GET",
+  });
+  return { data, error, loading };
+}
