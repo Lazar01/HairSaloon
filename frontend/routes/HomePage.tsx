@@ -18,7 +18,7 @@ function HomePage(){
         <div className="flex flex-col bg-white">
             <h2 className="pt-12 text-6xl text-center text-black font-extrabold leading-none tracking-tight sm:text-6xl  md:text-8xl drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">Hair Barber</h2>
                 <div className="flex pt-6 mt-12 flex-col md:flex-row justify-center gap-x-12 sm:gap-y-12 md:gap-y-0 items-center">
-                    <Card className="w-96 bg-black">
+                    <Card className="w-96 bg-black bg-opacity-90">
                         <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
                             <img
                             src="../assets/homePageImg1.jpg"
@@ -28,7 +28,7 @@ function HomePage(){
                         </CardHeader>
                         <CardBody>
                             <div className="mb-2 flex items-center justify-between">
-                            <Typography color="blue" className="font-medium">
+                            <Typography color="white" className="font-medium">
                             A clean angled haircut
                             </Typography>
                             <Typography color="blue" className="font-medium">
@@ -54,7 +54,7 @@ function HomePage(){
                             </Button>
                         </CardFooter>
                     </Card>
-                    <Card className="w-96 bg-black">
+                    <Card className="w-96 bg-black bg-opacity-90">
                         <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
                             <img
                             src="../assets/homePageImg2.jpg"
@@ -64,7 +64,7 @@ function HomePage(){
                         </CardHeader>
                         <CardBody>
                             <div className="mb-2 flex items-center justify-between">
-                            <Typography color="blue" className="font-medium">
+                            <Typography color="white" className="font-medium">
                             A clean angled haircut
                             </Typography>
                             <Typography color="blue" className="font-medium">
@@ -90,7 +90,7 @@ function HomePage(){
                             </Button>
                         </CardFooter>
                     </Card>
-                    <Card className="w-96 bg-black">
+                    <Card className="w-96 bg-black bg-opacity-90">
                         <CardHeader shadow={false} floated={false} className="sm:h-60 md:h-64">
                             <img
                             src="../assets/homePageImg3.jpg"
@@ -100,7 +100,7 @@ function HomePage(){
                         </CardHeader>
                         <CardBody>
                             <div className="mb-2 flex items-center justify-between">
-                            <Typography color="blue" className="font-medium">
+                            <Typography color="white" className="font-medium">
                                 Fade
                             </Typography>
                             <Typography color="blue" className="font-medium">
