@@ -1,6 +1,8 @@
 
 const db_connection = require('../db_connection.js');
 const db = db_connection.connectWithDatabase();
+const nodemailer = require("nodemailer");
+const Mailgen = require('mailgen');
 
 
 
@@ -82,9 +84,69 @@ const getAllServices = (req,res) => {
     })
 }
 
+const sendEmail = async (req,res) => {
+    console.log("Pristupio");
+    const SUBJECT = req.body.subject;
+    const MESSAGE = req.body.message;
+    const userEmail = req.body.email;   
+
+    let config = {
+        service : 'gmail',
+        auth : {
+            user: "lekla237@gmail.com",
+            pass: "yaknsixupgfdudtr"
+        }
+    }
+
+    let transporter = nodemailer.createTransport(config);
+
+    let MailGenerator = new Mailgen({
+        theme: "default",
+        product : {
+            name: "Mailgen",
+            link : 'https://mailgen.js/'
+        }
+    })
+
+    let response = {
+        body: {
+            name : "HairBarber",
+            intro: "Somebody contacted you!",
+            table : {
+                data : [
+                    {
+                        item : "New Message",
+                        description: MESSAGE,
+                        userMail: userEmail
+                    },
+                ]
+            },
+        }
+    }
+
+    let mail = MailGenerator.generate(response)
+
+    let message = {
+        from : "lekla237@gmail.cok",
+        to : "lekoviclazar0@gmail.com",
+        subject: SUBJECT,
+        html: mail
+    }
+
+    transporter.sendMail(message).then(() => {
+        return res.status(201).json({
+            msg: "you should receive an email"
+        })
+    }).catch(error => {
+        console.log(error);
+        return res.status(500).json({ error })
+    })
+}
+
 module.exports = {
     getAppointments,
     makeAppointment,
     getAllEmployees,
-    getAllServices
+    getAllServices,
+    sendEmail
 }
