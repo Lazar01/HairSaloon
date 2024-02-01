@@ -24,7 +24,7 @@ const Service = () => {
   }, [data]); 
   return (
     <>
-    <section className="bg-white h-auto">
+    <section className={error?"bg-white h-full":"bg-white h-auto"}>
       <div className="container mx-auto">
         <div className="-mx-4 flex flex-wrap">
           <div className="w-full px-4">
