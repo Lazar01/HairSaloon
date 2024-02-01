@@ -16,3 +16,12 @@ export function getAllServices() {
   });
   return { data, error, loading };
 }
+
+export function SendEmail() {
+  const [getData, { data, error, loading }] = useLazyAxios({
+    url: "http://localhost:3000/sendEmail",
+    method: "POST",
+  });
+
+  return { getData, data, error, loading }; // Export the relevant values or functions
+}
