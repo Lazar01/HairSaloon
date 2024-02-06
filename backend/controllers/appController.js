@@ -85,7 +85,6 @@ const getAllServices = (req,res) => {
 }
 
 const sendEmail = async (req,res) => {
-    console.log("Pristupio");
     const SUBJECT = req.body.subject;
     const MESSAGE = req.body.message;
     const userEmail = req.body.email;   
