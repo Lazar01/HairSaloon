@@ -25,3 +25,12 @@ export function SendEmail() {
 
   return { getData, data, error, loading }; // Export the relevant values or functions
 }
+
+export function SignUp() {
+  const [getData, {data, error, loading}] = useLazyAxios({
+    url: "http://localhost:3000/signup",
+    method: "POST",
+  });
+
+  return {getData, data, error, loading};
+}
