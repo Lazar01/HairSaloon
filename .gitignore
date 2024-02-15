@@ -14,6 +14,8 @@ pids
 # Dependency directories
 node_modules
 jspm_packages
+package-lock.json
+package.json
 
 #npm cache directory
 .npm
