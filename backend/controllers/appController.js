@@ -3,6 +3,8 @@ const db_connection = require('../db_connection.js');
 const db = db_connection.connectWithDatabase();
 const nodemailer = require("nodemailer");
 const Mailgen = require('mailgen');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 
 
@@ -16,11 +18,11 @@ const getAppointments = async (req,res) => {
             const time = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"];
             const reservedTimes = result.map((appointment) => appointment.Time.split(':').slice(0, 2).join(':'));
             const responseData = time.filter( item => !reservedTimes.includes(item));
-            res.status(200).json(responseData);
+            return res.status(200).json(responseData);
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json(error);
+        return res.status(500).json(error);
     }
 }
 
@@ -29,27 +31,24 @@ const makeAppointment = (req,res) => {
     const values = [req.body.time, req.body.date, req.body.employeeID, req.body.customerID];
     if(req.body.time == "")
     {
-        res.status(200).json("time");
-        return;
+        return res.status(200).send("time");
     }
     if(req.body.EmployeeID == "")
     {
-        res.status(200).json("employee");
-        return;
+        return res.status(200).send("employee");
     }
     if(req.body.date == "")
     {
-        res.status(200).json("date");
-        return;
+        return res.status(200).send("date");
     }
 
     db.query(query, values, (error, results) => {
         if (error) {
           console.error(error);
-          res.status(500).json('Error inserting appointment');
+          return res.status(500).json('Error inserting appointment');
         } else {
           console.log('Appointment inserted successfully');
-          res.status(200).json('success');
+          return res.status(200).json('success');
         }
     })
 }
@@ -60,11 +59,11 @@ const getAllEmployees = (req,res) => {
     db.query(query,(err,result)=>{
         if(err){
             console.log(err);
-            res.status(500).json('Error getting all the employees');
+            return res.status(500).json('Error getting all the employees');
         }
         else{
             console.log('Emloyees retrieved successfully');
-            res.status(200).json(result);
+            return res.status(200).json(result);
         }
     })
 }
@@ -75,11 +74,71 @@ const getAllServices = (req,res) => {
     db.query(query,(err,result)=>{
         if(err){
             console.log(err);
-            res.status(500).send('Error getting all the services');
+            return res.status(500).send('Error getting all the services');
         }
         else{
             console.log('Services retrieved successfully');
-            res.status(200).json(result);
+            return res.status(200).json(result);
+        }
+    })
+}
+
+const signup = (req,res) => {
+    const {name, email, contactNumber, password} = req.body;
+    console.log(typeof(password));
+    // if(name === "")
+    //     return res.status(400).send("The name isn't provided!");
+    // else if(email === "");
+    //     return res.status(400).send("The email isn't provided");
+
+    
+
+    db.query('SELECT EmailAddress FROM customer WHERE EmailAddress = ?', [email], async (error, result) => {
+        
+        if(error)
+        {
+            console.log(error);
+        }
+        
+        console.log(result);
+
+        if(result.length > 0 ){
+            return res.send("AlreadyRegisteredEmail")
+        }
+  
+    
+        const hashedPassword = await bcrypt.hash(password, 8);
+        
+        const queryInsert = "INSERT INTO customer(Name, EmailAddress, ContactNumber, Password) VALUES(?,?,?,?)";
+        const values = [name, email, contactNumber, hashedPassword];
+
+        db.query(queryInsert, values, (error, result)=>{
+            if(error)
+            {
+                console.log("Greska je: " + error);
+                return res.status(500).send(error);
+            }
+            else
+            {
+                return res.send("successful");
+            }
+        })
+    })
+}
+
+const login = (req,res) => {
+    const sql = "SELECT * FROM customer WHERE EmailAddress = ? and Password = ?"
+    db.query(sql, [req.body.email, req.body.password], (error, result) => {
+        if(error){
+            return res.send("Error");
+        }
+        if(data.length > 0){
+            const id = result[0].id;
+            const token = jwt.sign({id}, process.env.JWT_SECRET_KEY, {expiresIn: 300});
+            return res.json({Login:true, token, result});
+        }
+        else{
+            return res.send("Fail");
         }
     })
 }
@@ -142,10 +201,14 @@ const sendEmail = async (req,res) => {
     })
 }
 
+const generateToken = 
+
 module.exports = {
     getAppointments,
     makeAppointment,
     getAllEmployees,
     getAllServices,
-    sendEmail
+    sendEmail,
+    signup,
+    login
 }
