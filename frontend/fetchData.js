@@ -34,3 +34,23 @@ export function SignUp() {
 
   return {getData, data, error, loading};
 }
+
+export function LogIn() {
+  const [getData, {data, error, loading}] = useLazyAxios({
+    url: "http://localhost:3000/login",
+    method: "POST",
+    
+  });
+
+  return {getData, data, error, loading};
+}
+
+export function AuthenticateJWT() {
+  const {data, error, loading} = useAxios({
+    url: "http://localhost:3000/authenticateJWT",
+    method: "GET",
+    headers: {'access-token': localStorage.getItem('token')},
+  })
+
+  return {data, error, loading};
+}
