@@ -10,8 +10,7 @@ import Register from "../routes/Register";
 import useVerifyAuthentication from "../hooks/verifyJWTHook";
 import React from "react";
 function NavBar() {
-  const { isAuthenticated, setIsAuthenticated, user, refetch } =
-    useVerifyAuthentication();
+  const { isAuthenticated, user, refetch } = useVerifyAuthentication();
   return (
     <BrowserRouter>
       <NavigationLayout
@@ -23,11 +22,7 @@ function NavBar() {
         <Route
           path="/"
           element={
-            <Login
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-              refetch={refetch}
-            />
+            <Login isAuthenticated={isAuthenticated} refetch={refetch} />
           }
         />
         <Route path="/register" element={<Register />} />
@@ -38,7 +33,12 @@ function NavBar() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/staff" element={<StaffPage />} />
-        <Route path="/services" element={<ServicesPage />} />
+        <Route
+          path="/services"
+          element={
+            <ServicesPage user={user} isAuthenticated={isAuthenticated} />
+          }
+        />
         {/* <Route path="*" element={<NoPage />} /> */}
       </Routes>
     </BrowserRouter>
