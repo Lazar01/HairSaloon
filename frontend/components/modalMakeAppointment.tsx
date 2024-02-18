@@ -8,6 +8,7 @@ import { Carousel, IconButton } from "@material-tailwind/react";
 interface ModalProps {
   showModal: boolean;
   toggleModal: (showModal: boolean) => void;
+  userID: number;
 }
 
 interface Appointment {
@@ -25,7 +26,7 @@ interface Employee {
   Image?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
+const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
    
   const { data: AllEmployeesData, loading: EmployeesLoadin, error: AllEmployeesError } =  getAllEmployees()
 
@@ -69,7 +70,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal }) => {
         time: chosenTime,
         date: chosenDate,
         employeeID: chosenEmployee,
-        customerID: 1,
+        customerID: userID,
       };
       setIsMakingAppointment(true);
       setAppointmentData(newAppointmentData);
