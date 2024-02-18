@@ -1,9 +1,9 @@
-import Footer from "../components/footer"
-import BlogCard from "../components/blogCard"
-function BlogPage(){
-    return(
-        <>
-        <section className="bg-white p-10 pt-20 dark:bg-dark lg:pb-20 lg:pt-[120px]">
+import Footer from "../components/footer";
+import BlogCard from "../components/blogCard";
+function BlogPage() {
+  return (
+    <>
+      <section className="bg-white p-10 pt-20 dark:bg-dark lg:pb-20 lg:pt-[120px]">
         <div className="container ml-auto mr-auto">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4">
@@ -45,9 +45,8 @@ function BlogPage(){
         </div>
       </section>
 
-        <Footer/>
-        </>
-              
-    )
+      <Footer />
+    </>
+  );
 }
-export default BlogPage
+export default BlogPage;
