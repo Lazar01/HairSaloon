@@ -1,20 +1,29 @@
 import { useEffect, useState } from 'react';
 import {AuthenticateJWT} from "../fetchData.js"
+
+interface User {
+  CustomerID: number;
+  Name: string;
+  EmailAddress: string;
+  ContactNumber: string;
+  Password: string;
+}
+
 const useVerifyAuthentication = () => {
   const { data, loading, error } = AuthenticateJWT();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userID, setUserID] = useState(-1);
+  const [user, setUser] = useState<User>({CustomerID:-1, Name:"",EmailAddress:"",ContactNumber:"",Password:""});
   useEffect(() => {
     if (data && data.Message === "Authenticated") {
       {
         setIsAuthenticated(true);
-        setUserID(data.userID)
+        setUser(data.user)
       }
     } else {
       setIsAuthenticated(false);
     }
   }, [data]);
-  return {isAuthenticated, userID};
+  return {isAuthenticated, user};
 };
 
 export default useVerifyAuthentication;
