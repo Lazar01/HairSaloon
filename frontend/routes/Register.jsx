@@ -2,8 +2,18 @@ import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {SignUp} from "../fetchData";
 import validation from '../components/loginValidation'
+import useVerifyAuthentication from "../hooks/verifyJWTHook";
 export default function Register() {
     const navigate = useNavigate();
+
+    const isAuthenticated = useVerifyAuthentication()
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/home");
+        }
+    }, [isAuthenticated]);
+
     const {getData, data, error, loading} = SignUp();
     const [values, setValues] = useState({
         email:'',
@@ -21,15 +31,11 @@ export default function Register() {
     }
     useEffect(()=>{
       if(errors.mail === "" && errors.name == "" && errors.password == "")
-        {
-          console.log(values.email);
-          console.log(errors);
           getData(values);
-        }
     },[errors])
     useEffect(()=>{
         if(data==="successful")
-            navigate('/home')
+            navigate('/')
     },[data])
     return (
       <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
