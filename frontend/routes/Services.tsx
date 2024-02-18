@@ -2,19 +2,22 @@ import React, { useEffect, useState } from "react";
 import ServiceCard from "../components/serviceCard";
 import Footer from "../components/footer";
 import { getAllServices } from "../fetchData";
-const Service = () => {
-  interface Service {
-    ServiceID: number;
-    Service_Name: string;
-    Cost: number;
-    Description: string;
-  }
+interface Service {
+  ServiceID: number;
+  Service_Name: string;
+  Cost: number;
+  Description: string;
+}
+interface ServiceProps {
+  isAuthenticated: boolean;
+  user: any;
+}
 
+const Service: React.FC<ServiceProps> = ({ isAuthenticated, user }) => {
   const [servicesData, setServicesData] = useState<Service[]>();
   const [servicesLoading, setServicesLoading] = useState<boolean>();
   const [servicesError, setServicesError] = useState<Error>();
   const { data, loading, error } = getAllServices();
-  console.log(data);
   useEffect(() => {
     setServicesData(data);
     setServicesLoading(loading);
@@ -42,10 +45,12 @@ const Service = () => {
             {!servicesLoading ? (
               servicesData?.map((service: Service, index) => (
                 <ServiceCard
-                  key={index} // Make sure to provide a unique key for each item in the map
+                  key={index}
                   title={service.Service_Name}
                   details={service.Description}
                   price={service.Cost}
+                  isAuthenticated={isAuthenticated}
+                  user={user}
                 />
               ))
             ) : (
