@@ -1,21 +1,47 @@
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import validation from '../components/loginValidation'
+import {LogIn} from "../fetchData";
+import useVerifyAuthentication from '../hooks/verifyJWTHook';
 
 export default function Login() {
+    const navigate = useNavigate();
+    const {isAuthenticated} = useVerifyAuthentication()
+    console.log(isAuthenticated);
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/home");
+        }
+    }, [isAuthenticated]);
+
+    const {getData, data, error, loading} = LogIn();
+    
+
     const [values, setValues] = useState({
         email:'',
         password:'',
     })
     const [errors, setErrors] = useState('');
+
     const handleInput = (event) =>{
-        setValues(prev => ({...prev, [event.target.name]: [event.target.value]}))
+        setValues(prev => ({...prev, [event.target.name]: event.target.value}))
     }
     const handleSumbit = (event) =>{
         event.preventDefault();
         setErrors(validation(values));
     }
+    useEffect(()=>{
+        if(errors.mail === "")
+            getData(values);
+      },[errors])
+    useEffect(()=>{
+        if(data && data.Login)
+        {
+            localStorage.setItem("token", data.token);
+            navigate('/home');
+        }
+    },[data])
     return (
         <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
             <div className="w-full p-6 m-auto bg-white rounded-md shadow-md lg:max-w-xl">
@@ -51,13 +77,13 @@ export default function Login() {
                             onChange={handleInput}
                             name='password'
                         />
-                        {errors.password && <span className='text-red-600'>{errors.password}</span>}
+
                     </div>
                     <a
                         href="#"
                         className="text-xs text-purple-600 hover:underline"
                     >
-                        Forget Password?
+                        Forget Password? {(data && data==='Fail') && <span className='text-red-600'>No accounts with that email and password</span> }
                     </a>
                     <div className="mt-6">
                         <button type='submit' className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600">
