@@ -7,15 +7,13 @@ import {
   Button,
 } from "@material-tailwind/react";
 import Modal from "../components/modalMakeAppointment";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Footer from "../components/footer";
 import { Link, useNavigate } from "react-router-dom";
 import { Carousel, IconButton } from "@material-tailwind/react";
 import { FcAbout } from "react-icons/fc";
 import { FaScissors } from "react-icons/fa6";
 import { GiBeard } from "react-icons/gi";
-import { AuthenticateJWT } from "../fetchData.js";
-import useVerifyAuthentication from "../hooks/verifyJWTHook";
 
 interface ModalProps {
   isAuthenticated: boolean;
@@ -23,7 +21,6 @@ interface ModalProps {
 }
 
 const HomePage: React.FC<ModalProps> = ({ isAuthenticated, user }) => {
-  const { data, loading, error } = AuthenticateJWT();
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
@@ -33,10 +30,6 @@ const HomePage: React.FC<ModalProps> = ({ isAuthenticated, user }) => {
       setShowModal((prevShowModal) => !prevShowModal);
     }
   };
-
-  if (error) return <div>{error.message}</div>;
-
-  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-col bg-white">
