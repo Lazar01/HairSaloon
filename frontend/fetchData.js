@@ -45,11 +45,11 @@ export function LogIn() {
 }
 
 export function AuthenticateJWT() {
-  const { data, error, loading } = useAxios({
+  const { data, error, loading, refetch } = useAxios({
     url: "http://localhost:3000/authenticateJWT",
     method: "GET",
     headers: { "access-token": localStorage.getItem("token") },
   });
 
-  return { data, error, loading };
+  return { data, error, loading, refetch };
 }
