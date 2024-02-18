@@ -126,21 +126,54 @@ const signup = (req,res) => {
     })
 }
 
-const login = (req,res) => {
-    const sql = "SELECT * FROM customer WHERE EmailAddress = ? and Password = ?"
-    db.query(sql, [req.body.email, req.body.password], (error, result) => {
-        if(error){
-            return res.send("Error");
+const login = (req, res) => {
+    const sql = "SELECT * FROM customer WHERE EmailAddress = ?";
+    db.query(sql, [req.body.email], (error, result) => {
+        if (error) {
+            return res.status(500).send("Error");
         }
-        if(data.length > 0){
-            const id = result[0].id;
-            const token = jwt.sign({id}, process.env.JWT_SECRET_KEY, {expiresIn: 300});
-            return res.json({Login:true, token, result});
+        if (result.length > 0) {
+            console.log(typeof(req.body.password))
+            bcrypt.compare(req.body.password, result[0].Password, (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send(err);
+                }
+                if (!data) {
+                    return res.status(401).send('Invalid password');
+                }
+                const id = result[0];
+                console.log("Ovo je id: ", id);
+                const token = jwt.sign( {id} , process.env.JWT_SECRET_KEY, { expiresIn: 3600 });
+                return res.json({ Login: true, token });
+            });
+        } else {
+            return res.status(401).send("Fail");
         }
-        else{
-            return res.send("Fail");
-        }
-    })
+    });
+};
+
+
+const verifyJWT = (req, res, next) => {
+    const token = req.headers["access-token"];
+    if(!token){
+        console.log("ovde1");
+        return res.send("No token!");
+    }
+    else{
+        jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+            if(err)
+            {
+                console.log("ovde2");
+                return res.send("Not Authenticated");
+            }
+            else
+            {
+                console.log("ovde3");
+                return res.json({Message:'Authenticated', userID: decoded.id.CustomerID});
+            }
+        })
+    }
 }
 
 const sendEmail = async (req,res) => {
@@ -210,5 +243,6 @@ module.exports = {
     getAllServices,
     sendEmail,
     signup,
-    login
+    login,
+    verifyJWT
 }
