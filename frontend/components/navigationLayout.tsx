@@ -3,12 +3,25 @@ import { GiHamburgerMenu, GiBeard } from "react-icons/gi";
 import { IconButton, Typography } from "@material-tailwind/react";
 import { useState } from "react";
 import headerBackground from "../assets/barberHeaderBackground.jpg";
-import useVerifyAuthentication from "../hooks/verifyJWTHook";
+import { CiLogout } from "react-icons/ci";
 
-function NavigationLayout() {
+interface ModalProps {
+  isAuthenticated: boolean;
+  refetch: () => void;
+  user: any;
+}
+
+const NavigationLayout: React.FC<ModalProps> = ({
+  isAuthenticated,
+  refetch,
+  user,
+}) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
-  const { isAuthenticated, user } = useVerifyAuthentication();
-  console.log(user);
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    refetch();
+  };
+
   return (
     <>
       <nav
@@ -62,11 +75,14 @@ function NavigationLayout() {
               <Typography
                 variant="lead"
                 color="amber"
-                className="underline pl-2"
+                className="underline p-2"
               >
                 {" "}
                 {user.Name}
               </Typography>
+              <button onClick={handleLogOut}>
+                <CiLogout />
+              </button>
             </>
           ) : (
             <Link to="/">Login/Register</Link>
@@ -76,6 +92,6 @@ function NavigationLayout() {
       <Outlet />
     </>
   );
-}
+};
 
 export default NavigationLayout;
