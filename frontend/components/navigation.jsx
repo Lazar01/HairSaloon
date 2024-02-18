@@ -16,7 +16,7 @@ function NavBar() {
     <BrowserRouter>
       <NavigationLayout
         isAuthenticated={isAuthenticated}
-        setIsAuthenticated={setIsAuthenticated}
+        refetch={refetch}
         user={user}
       />
       <Routes>
