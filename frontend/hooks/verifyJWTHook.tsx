@@ -10,7 +10,7 @@ interface User {
 }
 
 const useVerifyAuthentication = () => {
-  const { data, loading, error } = AuthenticateJWT();
+  const { data, refetch, error } = AuthenticateJWT();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User>({
     CustomerID: -1,
@@ -21,15 +21,14 @@ const useVerifyAuthentication = () => {
   });
   useEffect(() => {
     if (data && data.Message === "Authenticated") {
-      {
-        setIsAuthenticated(true);
-        setUser(data.user);
-      }
+      setIsAuthenticated(true);
+      setUser(data.user);
     } else {
       setIsAuthenticated(false);
     }
   }, [data]);
-  return { isAuthenticated, user };
+
+  return { isAuthenticated, user, refetch };
 };
 
 export default useVerifyAuthentication;
