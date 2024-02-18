@@ -21,7 +21,7 @@ function HomePage(){
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
     
-    const {isAuthenticated, userID} = useVerifyAuthentication()
+    const {isAuthenticated, user} = useVerifyAuthentication()
     const toggleModal = () => 
     {
       if(!isAuthenticated)
@@ -255,7 +255,7 @@ function HomePage(){
                         </CardFooter>
                     </Card>
                 </div>
-                {showModal ? <Modal userID={userID} showModal={showModal} toggleModal={toggleModal} /> : null}
+                {showModal ? <Modal userID={user?.CustomerID} showModal={showModal} toggleModal={toggleModal} /> : null}
                 <Footer/>
         </div>
         
