@@ -16,12 +16,17 @@ import { FaScissors } from "react-icons/fa6";
 import { GiBeard } from "react-icons/gi";
 import { AuthenticateJWT } from "../fetchData.js";
 import useVerifyAuthentication from "../hooks/verifyJWTHook";
-function HomePage() {
+
+interface ModalProps {
+  isAuthenticated: boolean;
+  user: any;
+}
+
+const HomePage: React.FC<ModalProps> = ({ isAuthenticated, user }) => {
   const { data, loading, error } = AuthenticateJWT();
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
-  const { isAuthenticated, user } = useVerifyAuthentication();
   const toggleModal = () => {
     if (!isAuthenticated) navigate("/");
     else {
@@ -308,5 +313,5 @@ function HomePage() {
       <Footer />
     </div>
   );
-}
+};
 export default HomePage;
