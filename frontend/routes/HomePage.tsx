@@ -6,19 +6,40 @@ import {
     Typography,
     Button,
   } from "@material-tailwind/react";
-  import Modal from "../components/modalMakeAppointment"
-  import { useState } from "react";
-  import Footer from "../components/footer";
-import { Link } from "react-router-dom";
+import Modal from "../components/modalMakeAppointment"
+import { useEffect, useState } from "react";
+import Footer from "../components/footer";
+import { Link, useNavigate } from "react-router-dom";
 import { Carousel, IconButton } from "@material-tailwind/react";
 import { FcAbout } from "react-icons/fc";
 import { FaScissors } from "react-icons/fa6";
 import { GiBeard } from "react-icons/gi";
+import {AuthenticateJWT} from "../fetchData.js"
+import useVerifyAuthentication from "../hooks/verifyJWTHook"
 function HomePage(){
+    const {data, loading, error} = AuthenticateJWT();
     const [showModal, setShowModal] = useState(false);
-    const toggleModal = () => {
-    setShowModal((prevShowModal) => !prevShowModal);
-  };
+    const navigate = useNavigate();
+    
+    const {isAuthenticated, userID} = useVerifyAuthentication()
+    const toggleModal = () => 
+    {
+      if(!isAuthenticated)
+        navigate("/")
+      else{
+        
+
+        setShowModal((prevShowModal) => !prevShowModal);
+
+      }
+    };
+
+    if (error)
+      return(<div>{error.message}</div>)
+
+    if(loading)
+        return(<div>Loading...</div>)
+
     return(
         <div className="flex flex-col bg-white">
             <h2 className="pt-12 text-6xl text-center text-black font-extrabold leading-none tracking-tight sm:text-6xl  md:text-8xl drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">Barber</h2>
@@ -151,7 +172,7 @@ function HomePage(){
                         </CardBody>
                         <CardFooter className="pt-0">
                             <Button
-                            onClick={() => setShowModal(!showModal)}
+                            onClick={toggleModal}
                             ripple={false}
                             fullWidth={true}
                             className="bg-white text-black shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
@@ -187,7 +208,7 @@ function HomePage(){
                         </CardBody>
                         <CardFooter className="pt-0">
                             <Button
-                            onClick={() => setShowModal(!showModal)}
+                            onClick={toggleModal}
                             ripple={false}
                             fullWidth={true}
                             className="bg-white text-black shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
@@ -224,7 +245,7 @@ function HomePage(){
                         </CardBody>
                         <CardFooter className="pt-0">
                             <Button
-                            onClick={() => setShowModal(!showModal)}
+                            onClick={toggleModal}
                             ripple={false}
                             fullWidth={true}
                             className="bg-white text-black shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
@@ -234,7 +255,7 @@ function HomePage(){
                         </CardFooter>
                     </Card>
                 </div>
-                {showModal ? <Modal showModal={showModal} toggleModal={toggleModal} /> : null}
+                {showModal ? <Modal userID={userID} showModal={showModal} toggleModal={toggleModal} /> : null}
                 <Footer/>
         </div>
         
