@@ -1,11 +1,15 @@
 import { Outlet, Link } from "react-router-dom";
 import { GiHamburgerMenu, GiBeard } from "react-icons/gi";
-import { IconButton } from "@material-tailwind/react";
+import { IconButton, Typography } from "@material-tailwind/react";
 import { useState } from "react";
 import headerBackground from "../assets/barberHeaderBackground.jpg"
+import useVerifyAuthentication from "../hooks/verifyJWTHook";
+
 
 function NavigationLayout() {
   const [isMenuOpen,setMenuOpen] = useState(false);
+  const {isAuthenticated, user} = useVerifyAuthentication();
+  console.log(user)
   return (
     <>
     <nav className="bg-black bg-opacity-75 bg-blend-overlay flex justify-between bg-center" style={{ backgroundImage: `url(${headerBackground})` }}>
@@ -46,10 +50,13 @@ function NavigationLayout() {
             <GiHamburgerMenu />
           </IconButton>
         </div>
-          <Link to="/">
+        {isAuthenticated?
+          <><Typography variant="lead">Hello,</Typography><Typography variant="lead" color="amber" className="underline pl-2"> {user.Name}</Typography></>
+          :<Link to="/">
             Login/Register
           </Link>
-        </div>
+        }
+      </div>
     </nav>
     <Outlet />
     </>

@@ -8,7 +8,6 @@ import useVerifyAuthentication from '../hooks/verifyJWTHook';
 export default function Login() {
     const navigate = useNavigate();
     const {isAuthenticated} = useVerifyAuthentication()
-    console.log(isAuthenticated);
     useEffect(() => {
         if (isAuthenticated) {
             navigate("/home");
