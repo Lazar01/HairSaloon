@@ -170,7 +170,7 @@ const verifyJWT = (req, res, next) => {
             else
             {
                 console.log("ovde3");
-                return res.json({Message:'Authenticated', userID: decoded.id.CustomerID});
+                return res.json({Message:'Authenticated', user: decoded.id});
             }
         })
     }
