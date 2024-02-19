@@ -36,12 +36,12 @@ export function SignUp() {
 }
 
 export function LogIn() {
-  const [getData, { data, error, loading }] = useLazyAxios({
+  const [getData, { data, error, loading, cancel }] = useLazyAxios({
     url: "http://localhost:3000/login",
     method: "POST",
   });
 
-  return { getData, data, error, loading };
+  return { getData, data, error, loading, cancel };
 }
 
 export function AuthenticateJWT() {
