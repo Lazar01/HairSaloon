@@ -1,17 +1,17 @@
 import { Outlet, Link } from "react-router-dom";
 import { GiHamburgerMenu, GiBeard } from "react-icons/gi";
 import { IconButton, Typography } from "@material-tailwind/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import headerBackground from "../assets/barberHeaderBackground.jpg";
 import { CiLogout } from "react-icons/ci";
 
-interface ModalProps {
+interface NavLayoutProps {
   isAuthenticated: boolean;
   refetch: () => void;
   user: any;
 }
 
-const NavigationLayout: React.FC<ModalProps> = ({
+const NavigationLayout: React.FC<NavLayoutProps> = ({
   isAuthenticated,
   refetch,
   user,
@@ -21,6 +21,7 @@ const NavigationLayout: React.FC<ModalProps> = ({
     localStorage.removeItem("token");
     refetch();
   };
+  useEffect(() => {}, [isAuthenticated]);
 
   return (
     <>
