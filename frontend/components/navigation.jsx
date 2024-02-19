@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import HomePage from "../routes/HomePage";
 import ContactPage from "../routes/ContactPage";
 import BlogPage from "../routes/BlogPage";
@@ -8,11 +8,20 @@ import ServicesPage from "../routes/Services";
 import Login from "../routes/Login";
 import Register from "../routes/Register";
 import useVerifyAuthentication from "../hooks/verifyJWTHook";
-import React from "react";
+import React, { useEffect } from "react";
 function NavBar() {
-  const { isAuthenticated, user, refetch } = useVerifyAuthentication();
+  const { isAuthenticated, user, refetch, expTime, loading, error } =
+    useVerifyAuthentication();
+  let location = useLocation();
+  useEffect(() => {
+    if (expTime * 1000 < Date.now()) {
+      refetch();
+    }
+  }, [location]);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
   return (
-    <BrowserRouter>
+    <>
       <NavigationLayout
         isAuthenticated={isAuthenticated}
         refetch={refetch}
@@ -28,7 +37,13 @@ function NavBar() {
         <Route path="/register" element={<Register />} />
         <Route
           path="/home"
-          element={<HomePage isAuthenticated={isAuthenticated} user={user} />}
+          element={
+            <HomePage
+              isAuthenticated={isAuthenticated}
+              user={user}
+              refetch={refetch}
+            />
+          }
         />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/blog" element={<BlogPage />} />
@@ -41,7 +56,7 @@ function NavBar() {
         />
         {/* <Route path="*" element={<NoPage />} /> */}
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 export default NavBar;
