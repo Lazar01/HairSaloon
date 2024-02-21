@@ -10,7 +10,7 @@ import Register from "../routes/Register";
 import useVerifyAuthentication from "../hooks/verifyJWTHook";
 import React, { useEffect } from "react";
 function NavBar() {
-  const { isAuthenticated, user, refetch, expTime, loading, error } =
+  const { isAuthenticated, user, refetch, expTime, loading, error, role } =
     useVerifyAuthentication();
   let location = useLocation();
   useEffect(() => {
@@ -46,7 +46,12 @@ function NavBar() {
           }
         />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/blog" element={<BlogPage />} />
+        <Route
+          path="/blog"
+          element={
+            <BlogPage isAuthenticated={isAuthenticated} role={user.Role} />
+          }
+        />
         <Route path="/staff" element={<StaffPage />} />
         <Route
           path="/services"
