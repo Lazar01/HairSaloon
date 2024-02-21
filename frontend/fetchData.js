@@ -17,6 +17,21 @@ export function getAllServices() {
   return { data, error, loading };
 }
 
+export function getAllBlogs() {
+  const { data, error, loading, refetch } = useAxios({
+    url: "http://localhost:3000/getAllBlogs",
+    method: "GET",
+  });
+  return { data, error, loading, refetch };
+}
+export function addNewBlog() {
+  const [getData, { data, error, cancel }] = useLazyAxios({
+    url: "http://localhost:3000/makeNewBlog",
+    method: "POST",
+  });
+  return { getData, cancel, data, error };
+}
+
 export function SendEmail() {
   const [getData, { data, error, loading }] = useLazyAxios({
     url: "http://localhost:3000/sendEmail",
