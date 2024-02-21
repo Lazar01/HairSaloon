@@ -123,7 +123,6 @@ const makeBlog = (req, res) => {
     req.body.image,
     formattedDate,
   ];
-  console.log(typeof req.body.date);
   values.forEach((element) => {
     if (element == "")
       return res.status(400).send("Please provide all neccessery data");
@@ -135,6 +134,31 @@ const makeBlog = (req, res) => {
       return res.status(500).send("Error inserting blog");
     } else {
       console.log("Blog inserted successfully");
+      return res.status(200).send("success");
+    }
+  });
+};
+const editBlog = (req, res) => {
+  console.log(req.body);
+  const query =
+    "UPDATE blogs SET Title = ?, Description = ?, Image = ? WHERE BlogID=?";
+  const values = [
+    req.body.title,
+    req.body.description,
+    req.body.image,
+    req.body.id,
+  ];
+  values.forEach((element) => {
+    if (element == "")
+      return res.status(400).send("Please provide all neccessery data");
+  });
+
+  db.query(query, values, (error, results) => {
+    if (error) {
+      console.error(error.message);
+      return res.status(500).send("Error inserting blog");
+    } else {
+      console.log("Blog updated successfully");
       return res.status(200).send("success");
     }
   });
@@ -302,4 +326,5 @@ const generateToken = (module.exports = {
   verifyJWT,
   getAllBlogs,
   makeBlog,
+  editBlog,
 });

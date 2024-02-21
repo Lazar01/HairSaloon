@@ -11,6 +11,7 @@ const {
   verifyJWT,
   getAllBlogs,
   makeBlog,
+  editBlog,
 } = require("../controllers/appController.js");
 
 router.get("/getAppointments", getAppointments);
@@ -24,6 +25,8 @@ router.get("/getAllServices", getAllServices);
 router.get("/getAllBlogs", getAllBlogs);
 
 router.post("/makeNewBlog", makeBlog);
+
+router.post("/editBlog", editBlog);
 
 router.post("/sendEmail", sendEmail);
 

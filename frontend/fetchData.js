@@ -31,6 +31,13 @@ export function addNewBlog() {
   });
   return { getData, cancel, data, error };
 }
+export function editBlog() {
+  const [getData, { data, error, cancel, refetch }] = useLazyAxios({
+    url: "http://localhost:3000/editBlog",
+    method: "POST",
+  });
+  return { getData, cancel, refetch, data, error };
+}
 
 export function SendEmail() {
   const [getData, { data, error, loading }] = useLazyAxios({
