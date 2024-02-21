@@ -59,7 +59,7 @@ function NavBar() {
             <ServicesPage user={user} isAuthenticated={isAuthenticated} />
           }
         />
-        {/* <Route path="*" element={<NoPage />} /> */}
+        <Route path="*" element={<HomePage />} />
       </Routes>
     </>
   );
