@@ -3,7 +3,7 @@ import BlogCard from "../components/blogCard";
 import { Button, Typography } from "@material-tailwind/react";
 import { FaPlus } from "react-icons/fa6";
 import { getAllBlogs, addNewBlog } from "../fetchData";
-import NewBlogModal from "../components/newBlogModal";
+import BlogModal from "../components/BlogModal";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 
@@ -12,6 +12,7 @@ interface BlogProps {
   role: string;
 }
 interface Blog {
+  BlogID: number;
   Title: string;
   Description: string;
   Date: Date;
@@ -75,22 +76,18 @@ const BlogPage: React.FC<BlogProps> = ({ isAuthenticated, role }) => {
                 isAuthenticated={isAuthenticated}
                 role={role}
                 date={blog.Date}
+                id={blog.BlogID}
                 CardTitle={blog.Title}
                 CardDescription={blog.Description}
                 image={blog.Image ? blog.Image : "../assets/service1.jpg"}
                 key={index}
+                refetch={refetch}
               />
             ))}
           </div>
         </div>
       </section>
-      {showModal && (
-        <NewBlogModal
-          refetch={refetch}
-          setShowModal={setShowModal}
-          showModal={showModal}
-        />
-      )}
+      {showModal && <BlogModal refetch={refetch} setShowModal={setShowModal} />}
       <Footer />
     </>
   );
