@@ -60,7 +60,12 @@ const NewBlogModal: React.FC<ModalProps> = ({ setShowModal, refetch }) => {
                 label="Description"
                 onChange={handleInput}
               ></Input>
-              <input name="image" type="file" onChange={handleInput}></input>
+              <input
+                name="image"
+                type="file"
+                onChange={handleInput}
+                accept="image/*"
+              ></input>
 
               {/*footer*/}
               {data == "success" && <span>Created new blog</span>}
