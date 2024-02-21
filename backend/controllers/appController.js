@@ -100,6 +100,45 @@ const getAllServices = (req, res) => {
   });
 };
 
+const getAllBlogs = (req, res) => {
+  const query = "SELECT * FROM blogs";
+  db.query(query, (err, result) => {
+    if (err) res.status(500).send(err);
+    else {
+      res.status(200).send(result);
+    }
+  });
+};
+const makeBlog = (req, res) => {
+  const dateString = req.body.date;
+
+  const dateObject = new Date(dateString);
+
+  const formattedDate = dateObject.toISOString().slice(0, 19).replace("T", " ");
+  const query =
+    "INSERT INTO blogs (Title, Description, Image, Date) VALUES (?, ?, ?, ?)";
+  const values = [
+    req.body.title,
+    req.body.description,
+    req.body.image,
+    formattedDate,
+  ];
+  console.log(typeof req.body.date);
+  values.forEach((element) => {
+    if (element == "")
+      return res.status(400).send("Please provide all neccessery data");
+  });
+
+  db.query(query, values, (error, results) => {
+    if (error) {
+      console.error(error.message);
+      return res.status(500).send("Error inserting blog");
+    } else {
+      console.log("Blog inserted successfully");
+      return res.status(200).send("success");
+    }
+  });
+};
 const signup = (req, res) => {
   const { name, email, contactNumber, password } = req.body;
   console.log(typeof password);
@@ -261,4 +300,6 @@ const generateToken = (module.exports = {
   signup,
   login,
   verifyJWT,
+  getAllBlogs,
+  makeBlog,
 });
