@@ -6,22 +6,39 @@ interface ModalProps {
   setShowModal: (showModal: boolean) => void;
   refetch: () => void;
 }
+interface BlogValues {
+  title: string;
+  description: string;
+  image: File | undefined;
+  date: Date;
+}
 const NewBlogModal: React.FC<ModalProps> = ({ setShowModal, refetch }) => {
-  const [values, setValues] = useState({
+  const [values, setValues] = useState<BlogValues>({
     title: "",
     description: "",
-    image: "",
+    image: undefined,
     date: new Date(),
   });
   const { data, getData } = addNewBlog();
   const handleSumbit = (event: any) => {
     event.preventDefault();
+    const formData = new FormData();
     setValues((prev) => ({ ...prev, date: new Date() }));
-    getData(values);
+    formData.append("title", values.title);
+    formData.append("description", values.description);
+    formData.append(
+      "date",
+      values.date.toISOString().slice(0, 19).replace("T", " ")
+    );
+    if (values.image) formData.append("image", values.image);
+    getData(formData);
   };
   const handleInput = (event: any) => {
     setValues((prev) => ({ ...prev, [event.target.name]: event.target.value }));
-    console.log(event.target.value);
+  };
+  const handleImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) setValues((prev) => ({ ...prev, image: file }));
   };
   useEffect(() => {
     if (data && data == "success") refetch();
@@ -53,17 +70,19 @@ const NewBlogModal: React.FC<ModalProps> = ({ setShowModal, refetch }) => {
                 crossOrigin="anonymous"
                 label="Header"
                 onChange={handleInput}
+                required
               ></Input>
               <Input
                 name="description"
                 crossOrigin="anonymous"
                 label="Description"
                 onChange={handleInput}
+                required
               ></Input>
               <input
                 name="image"
                 type="file"
-                onChange={handleInput}
+                onChange={handleImage}
                 accept="image/*"
               ></input>
 
