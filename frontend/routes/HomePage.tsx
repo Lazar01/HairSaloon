@@ -163,10 +163,10 @@ const HomePage: React.FC<ModalProps> = ({ isAuthenticated, user }) => {
         </div>
       </div>
 
-      <Link to="./services" className="pt-12 w-fit mx-auto">
-        <h1 className="font-serif sm:text-3xl md:text-5xl antialiased font-semibold leading-tight tracking-normal text-inherit bg-white text-black italic underline w-auto">
+      <Link to="/services" className="pt-12 w-fit mx-auto">
+        <h2 className="text-6xl text-center text-black font-extrabold leading-none tracking-tight sm:text-6xl  md:text-8xl drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">
           Services
-        </h1>
+        </h2>
       </Link>
       <div className="flex pt-6 mt-12 pb-16 flex-col md:flex-row justify-center gap-x-12 sm:gap-y-12 md:gap-y-0 items-center">
         <Card className="w-96 bg-black bg-opacity-90">
