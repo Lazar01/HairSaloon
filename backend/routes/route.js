@@ -1,3 +1,17 @@
+const multer = require("multer");
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "../../frontend/assets/BlogImages"));
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
 const router = require("express").Router();
 
 const {
@@ -24,7 +38,7 @@ router.get("/getAllServices", getAllServices);
 
 router.get("/getAllBlogs", getAllBlogs);
 
-router.post("/makeNewBlog", makeBlog);
+router.post("/makeNewBlog", upload.single("image"), makeBlog);
 
 router.post("/editBlog", editBlog);
 
