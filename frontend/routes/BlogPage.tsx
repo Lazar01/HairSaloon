@@ -79,7 +79,7 @@ const BlogPage: React.FC<BlogProps> = ({ isAuthenticated, role }) => {
                 id={blog.BlogID}
                 CardTitle={blog.Title}
                 CardDescription={blog.Description}
-                image={blog.Image ? blog.Image : "../assets/service1.jpg"}
+                image={blog.Image}
                 key={index}
                 refetch={refetch}
               />
