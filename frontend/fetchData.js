@@ -28,6 +28,7 @@ export function addNewBlog() {
   const [getData, { data, error, cancel }] = useLazyAxios({
     url: "http://localhost:3000/makeNewBlog",
     method: "POST",
+    headers: { "Content-Type": "multipart/form-data" },
   });
   return { getData, cancel, data, error };
 }
