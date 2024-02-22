@@ -110,19 +110,16 @@ const getAllBlogs = (req, res) => {
   });
 };
 const makeBlog = (req, res) => {
-  const dateString = req.body.date;
-
-  const dateObject = new Date(dateString);
-
-  const formattedDate = dateObject.toISOString().slice(0, 19).replace("T", " ");
   const query =
     "INSERT INTO blogs (Title, Description, Image, Date) VALUES (?, ?, ?, ?)";
+  const imageFileName = req.file ? req.file.filename : null;
   const values = [
     req.body.title,
     req.body.description,
-    req.body.image,
-    formattedDate,
+    imageFileName,
+    req.body.date,
   ];
+
   values.forEach((element) => {
     if (element == "")
       return res.status(400).send("Please provide all neccessery data");
@@ -139,7 +136,6 @@ const makeBlog = (req, res) => {
   });
 };
 const editBlog = (req, res) => {
-  console.log(req.body);
   const query =
     "UPDATE blogs SET Title = ?, Description = ?, Image = ? WHERE BlogID=?";
   const values = [
