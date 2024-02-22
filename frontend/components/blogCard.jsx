@@ -13,11 +13,11 @@ const BlogCard = ({
   refetch,
 }) => {
   const [EditMode, setEditMode] = useState(false);
+  const imageUrl = "../assets/BlogImages/" + image;
   function handleEdit(mode, event) {
     event.stopPropagation();
     setEditMode(mode);
   }
-  console.log(EditMode);
   return (
     <div className="w-full px-4 md:w-1/2 lg:w-1/3">
       <div className="mb-10 w-full">
@@ -36,7 +36,11 @@ const BlogCard = ({
               </IconButton>
             </div>
           )}
-          <img src="../assets/service1.jpg" alt="" className="w-full h-80" />
+          <img
+            src={image ? imageUrl : "../assets/service1.jpg"}
+            alt="Image"
+            className="w-full h-80"
+          />
         </div>
 
         <div>
