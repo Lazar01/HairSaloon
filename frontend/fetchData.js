@@ -36,8 +36,16 @@ export function editBlog() {
   const [getData, { data, error, cancel, refetch }] = useLazyAxios({
     url: "http://localhost:3000/editBlog",
     method: "POST",
+    headers: { "Content-Type": "multipart/form-data" },
   });
   return { getData, cancel, refetch, data, error };
+}
+export function deleteBlog() {
+  const [getData, { data, error, loading, refetch }] = useLazyAxios({
+    url: "http://localhost:3000/deleteBlog",
+    method: "DELETE",
+  });
+  return { getData, data, error, loading, refetch };
 }
 
 export function SendEmail() {
