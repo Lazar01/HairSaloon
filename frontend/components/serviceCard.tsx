@@ -20,7 +20,7 @@ const ServiceCard = ({
 }: ServiceCardProps): JSX.Element => {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  console.log(isAuthenticated);
+
   const toggleModal = () => {
     if (!isAuthenticated) navigate("/");
     else setShowModal((prevShowModal) => !prevShowModal);
@@ -38,7 +38,7 @@ const ServiceCard = ({
             {price}$
           </Typography>
           <Button
-            onClick={() => setShowModal(!showModal)}
+            onClick={() => toggleModal()}
             ripple
             fullWidth={true}
             className="bg-black text-white shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
