@@ -5,6 +5,35 @@ const Mailgen = require("mailgen");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+function insertAppointment(req, res) {
+  const query =
+    "INSERT INTO appointments (Time, Date, EmployeeID, CustomerID) VALUES (?, ?, ?, ?)";
+  const values = [
+    req.body.time,
+    req.body.date,
+    req.body.employeeID,
+    req.body.customerID,
+  ];
+  if (req.body.time == "") {
+    return res.status(200).send("time");
+  }
+  if (req.body.EmployeeID == "") {
+    return res.status(200).send("employee");
+  }
+  if (req.body.date == "") {
+    return res.status(200).send("date");
+  }
+  db.query(query, values, (error, results) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json("Error inserting appointment");
+    } else {
+      console.log("Appointment inserted successfully");
+      return res.status(200).json("success");
+    }
+  });
+}
+
 const getAppointments = async (req, res) => {
   try {
     const { EmployeeID, Date } = req.query;
@@ -43,31 +72,38 @@ const getAppointments = async (req, res) => {
 };
 
 const makeAppointment = (req, res) => {
-  const query =
-    "INSERT INTO appointments (Time, Date, EmployeeID, CustomerID) VALUES (?, ?, ?, ?)";
-  const values = [
-    req.body.time,
-    req.body.date,
-    req.body.employeeID,
-    req.body.customerID,
-  ];
-  if (req.body.time == "") {
-    return res.status(200).send("time");
-  }
-  if (req.body.EmployeeID == "") {
-    return res.status(200).send("employee");
-  }
-  if (req.body.date == "") {
-    return res.status(200).send("date");
-  }
+  const reqDate = new Date(req.body.date);
+  const [hours, minutes, seconds] = req.body.time.split(":");
+  reqDate.setHours(hours);
+  reqDate.setMinutes(minutes);
+  reqDate.setSeconds = seconds;
+  const currentDate = new Date();
+  console.log(reqDate);
+  const query_DateRestriction =
+    "SELECT max(date) as latestDate, max(time) as time FROM appointments WHERE customerid=16";
+  const DateRestrictionValues = req.body.customerID;
+  db.query(query_DateRestriction, DateRestrictionValues, (err, data) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send("Cant query dates from appointments!");
+    } else if (data.length > 0) {
+      const [hours, minutes, seconds] = data[0].time.split(":");
 
-  db.query(query, values, (error, results) => {
-    if (error) {
-      console.error(error);
-      return res.status(500).json("Error inserting appointment");
+      const AppointmentDate = new Date(data[0].latestDate);
+      AppointmentDate.setHours(hours);
+      AppointmentDate.setMinutes(minutes);
+      AppointmentDate.setSeconds(seconds);
+
+      console.log(currentDate + " | " + AppointmentDate);
+
+      if (reqDate < currentDate) return res.status(406).send("RejectedDate");
+      else if (AppointmentDate >= currentDate)
+        return res.status(406).send("AlreadyActive");
+      else {
+        insertAppointment(req, res);
+      }
     } else {
-      console.log("Appointment inserted successfully");
-      return res.status(200).json("success");
+      insertAppointment(req, res);
     }
   });
 };
@@ -138,10 +174,12 @@ const makeBlog = (req, res) => {
 const editBlog = (req, res) => {
   const query =
     "UPDATE blogs SET Title = ?, Description = ?, Image = ? WHERE BlogID=?";
+  const imageFileName = req.file ? req.file.filename : null;
+  console.log(req.file);
   const values = [
     req.body.title,
     req.body.description,
-    req.body.image,
+    imageFileName,
     req.body.id,
   ];
   values.forEach((element) => {
@@ -159,6 +197,20 @@ const editBlog = (req, res) => {
     }
   });
 };
+const deleteBlog = (req, res) => {
+  const id = req.body.id;
+  const query = "DELETE FROM blogs WHERE BlogID = ?";
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.log("Error deleting blog:", err);
+      return res.status(500).send("Error deleting blog");
+    } else {
+      console.log("Successfully deleted blog");
+      return res.status(200).send("success");
+    }
+  });
+};
+
 const signup = (req, res) => {
   const { name, email, contactNumber, password } = req.body;
   console.log(typeof password);
@@ -323,4 +375,5 @@ const generateToken = (module.exports = {
   getAllBlogs,
   makeBlog,
   editBlog,
+  deleteBlog,
 });
