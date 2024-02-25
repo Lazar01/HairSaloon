@@ -15,6 +15,7 @@ import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import { getAllEmployees } from "../fetchData";
 import { useLazyAxios } from "use-axios-client";
+import { IoClose } from "react-icons/io5";
 import { Carousel, IconButton } from "@material-tailwind/react";
 interface ModalProps {
   showModal: boolean;
@@ -55,6 +56,16 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
     url: "http://localhost:3000/makeAppointment",
     method: "POST",
   });
+  useEffect(() => {
+    if (
+      makeAppointmentError &&
+      // @ts-ignore
+      makeAppointmentError.response.data == "RejectedDate"
+    ) {
+      alert("Can't choose date in past");
+    } else if (makeAppointmentError)
+      alert("You alrady have active appointment");
+  }, [makeAppointmentError]);
 
   const imgPath = "../assets/BarbersImages/";
   const [date, setDate] = useState(new Date());
@@ -110,7 +121,6 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
   const handleSaveChanges = (e: FormEvent) => {
     e.preventDefault();
     const newAppointmentData = {
-      // Add your appointment data here
       time: chosenTime,
       date: chosenDate,
       employeeID: chosenEmployee,
@@ -156,8 +166,8 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
                   className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                   onClick={() => toggleModal(showModal)}
                 >
-                  <span className="text-red-900 pl-10 text-2xl block outline-none focus:outline-none">
-                    X
+                  <span className="text-red-500 pl-10 text-2xl block outline-none focus:outline-none">
+                    <IoClose />
                   </span>
                 </button>
               </div>
@@ -327,6 +337,11 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
                 >
                   Save Changes
                 </button>
+                {makeAppointmentLoading && (
+                  <span className="text-lg flex-grow text-center rounded-2xl">
+                    In progress...
+                  </span>
+                )}
                 {makeAppointmentResponse === "success" && (
                   <span className="bg-light-green-800 text-white text-lg flex-grow text-center rounded-2xl">
                     Successfuly made an appointment
