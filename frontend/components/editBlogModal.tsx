@@ -32,12 +32,20 @@ const EditBlog: React.FC<ModalProps> = ({
     image: undefined,
     date: new Date(),
   });
-  console.log(id);
   const { data, getData } = editBlog();
   const handleSumbit = (event: any) => {
     event.preventDefault();
+    const formData = new FormData();
     setValues((prev) => ({ ...prev, date: new Date() }));
-    getData(values);
+    formData.append("id", values.id.toString());
+    formData.append("title", values.title);
+    formData.append("description", values.description);
+    if (values.image) formData.append("image", values.image);
+    formData.append(
+      "date",
+      values.date.toISOString().slice(0, 19).replace("T", " ")
+    );
+    getData(formData);
   };
   useEffect(() => {
     if (data == "success") refetch();
@@ -45,6 +53,10 @@ const EditBlog: React.FC<ModalProps> = ({
   const handleInput = (event: any) => {
     setValues((prev) => ({ ...prev, [event.target.name]: event.target.value }));
     console.log(event.target.value);
+  };
+  const handleImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) setValues((prev) => ({ ...prev, image: file }));
   };
   return (
     <>
@@ -85,7 +97,7 @@ const EditBlog: React.FC<ModalProps> = ({
               <input
                 name="image"
                 type="file"
-                onChange={handleInput}
+                onChange={handleImage}
                 accept="image/*"
               ></input>
 
