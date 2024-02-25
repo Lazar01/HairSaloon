@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { IconButton } from "@material-tailwind/react";
 import EditBlog from "../components/editBlogModal";
+import { deleteBlog } from "../fetchData";
 const BlogCard = ({
   image,
   id,
@@ -13,11 +14,24 @@ const BlogCard = ({
   refetch,
 }) => {
   const [EditMode, setEditMode] = useState(false);
+  const {
+    getData: DeleteBlog,
+    data: DeleteBlogResponse,
+    error,
+    loading,
+  } = deleteBlog();
   const imageUrl = "../assets/BlogImages/" + image;
   function handleEdit(mode, event) {
     event.stopPropagation();
     setEditMode(mode);
   }
+  function handleDelete(event) {
+    event.stopPropagation();
+    DeleteBlog({ id: id });
+  }
+  useEffect(() => {
+    if (DeleteBlogResponse && DeleteBlogResponse == "success") refetch();
+  }, [DeleteBlogResponse]);
   return (
     <div className="w-full px-4 md:w-1/2 lg:w-1/3">
       <div className="mb-10 w-full">
@@ -31,7 +45,7 @@ const BlogCard = ({
           )}
           {isAuthenticated && role && (
             <div className="absolute top-0 right-0 m-2">
-              <IconButton onClick={(e) => e.stopPropagation()}>
+              <IconButton onClick={(e) => handleDelete(e)}>
                 <MdDelete />
               </IconButton>
             </div>
