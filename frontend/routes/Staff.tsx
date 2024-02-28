@@ -1,22 +1,44 @@
 import { useEffect, useState } from "react";
 import Footer from "../components/footer";
 import { getAllEmployees } from "../fetchData";
+import { User } from "../hooks/verifyJWTHook";
+import { Button, Typography } from "@material-tailwind/react";
+import { FaPlus } from "react-icons/fa6";
 interface Employee {
   EmployeeID: number;
   Name: string;
   Addres: string;
   Image?: string;
 }
-const StaffPage = () => {
+interface StaffProps {
+  user: User;
+  isAuthenticated: boolean;
+}
+const StaffPage: React.FC<StaffProps> = ({ user, isAuthenticated }) => {
   const imgPath = "../assets/BarbersImages/";
   const {
     data: AllEmployeesData,
     loading: EmployeesLoadin,
     error: AllEmployeesError,
   } = getAllEmployees();
+  const [showAddModal, setShowAddModal] = useState(false);
   return (
     <>
       <div className="mx-auto bg-white pb-8">
+        {user.Role == "admin" && isAuthenticated && (
+          <Button
+            onClick={() => setShowAddModal(!showAddModal)}
+            variant="filled"
+            className="float-right m-2"
+          >
+            <div className="flex flex-row">
+              <FaPlus className="mt-auto mb-auto" />
+              <Typography variant="small" className="pl-2">
+                Add New Service
+              </Typography>
+            </div>
+          </Button>
+        )}
         <section className="text-center sm:pt-0 md:pt-24">
           <h2 className="pt-6 text-3xl font-bold">
             Meet the <u className="text-primary dark:text-primary-400">team</u>
