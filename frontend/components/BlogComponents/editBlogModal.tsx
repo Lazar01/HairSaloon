@@ -1,48 +1,63 @@
 import { Input } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
-import { addNewBlog } from "../fetchData";
+import { editBlog } from "../../fetchData";
 interface ModalProps {
   setShowModal: (showModal: boolean) => void;
+  id: number;
+  title: "";
+  desc: "";
+  image: "";
   refetch: () => void;
 }
 interface BlogValues {
+  id: number;
   title: string;
   description: string;
   image: File | undefined;
   date: Date;
 }
-const NewBlogModal: React.FC<ModalProps> = ({ setShowModal, refetch }) => {
+const EditBlog: React.FC<ModalProps> = ({
+  setShowModal,
+  title,
+  desc,
+  image,
+  id,
+  refetch,
+}) => {
   const [values, setValues] = useState<BlogValues>({
-    title: "",
-    description: "",
+    id: id,
+    title: title,
+    description: desc,
     image: undefined,
     date: new Date(),
   });
-  const { data, getData } = addNewBlog();
+  const { data, getData } = editBlog();
   const handleSumbit = (event: any) => {
     event.preventDefault();
     const formData = new FormData();
     setValues((prev) => ({ ...prev, date: new Date() }));
+    formData.append("id", values.id.toString());
     formData.append("title", values.title);
     formData.append("description", values.description);
+    if (values.image) formData.append("image", values.image);
     formData.append(
       "date",
       values.date.toISOString().slice(0, 19).replace("T", " ")
     );
-    if (values.image) formData.append("image", values.image);
     getData(formData);
   };
+  useEffect(() => {
+    if (data == "success") refetch();
+  }, [data]);
   const handleInput = (event: any) => {
     setValues((prev) => ({ ...prev, [event.target.name]: event.target.value }));
+    console.log(event.target.value);
   };
   const handleImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) setValues((prev) => ({ ...prev, image: file }));
   };
-  useEffect(() => {
-    if (data && data == "success") refetch();
-  }, [data]);
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -70,14 +85,14 @@ const NewBlogModal: React.FC<ModalProps> = ({ setShowModal, refetch }) => {
                 crossOrigin="anonymous"
                 label="Header"
                 onChange={handleInput}
-                required
+                value={values.title}
               ></Input>
               <Input
                 name="description"
                 crossOrigin="anonymous"
                 label="Description"
                 onChange={handleInput}
-                required
+                value={values.description}
               ></Input>
               <input
                 name="image"
@@ -107,11 +122,8 @@ const NewBlogModal: React.FC<ModalProps> = ({ setShowModal, refetch }) => {
           </div>
         </div>
       </div>
-      <div
-        onClick={() => setShowModal(false)}
-        className="opacity-25 fixed inset-0 z-40 bg-black"
-      ></div>
+      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </>
   );
 };
-export default NewBlogModal;
+export default EditBlog;

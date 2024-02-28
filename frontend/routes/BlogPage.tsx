@@ -1,9 +1,9 @@
 import Footer from "../components/footer";
-import BlogCard from "../components/blogCard";
+import BlogCard from "../components/BlogComponents/blogCard";
 import { Button, Typography } from "@material-tailwind/react";
 import { FaPlus } from "react-icons/fa6";
 import { getAllBlogs, addNewBlog } from "../fetchData";
-import BlogModal from "../components/BlogModal";
+import BlogModal from "../components/BlogComponents/BlogModal";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 

@@ -1,7 +1,7 @@
 import { Input } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
-import { deleteService } from "../fetchData";
+import { deleteService } from "../../fetchData";
 interface ModalProps {
   setShowModal: (showModal: boolean) => void;
   id: number;

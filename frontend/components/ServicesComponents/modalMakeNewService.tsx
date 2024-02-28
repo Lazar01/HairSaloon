@@ -1,63 +1,38 @@
 import { Input } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
-import { editBlog } from "../fetchData";
+import { addService } from "../../fetchData";
 interface ModalProps {
   setShowModal: (showModal: boolean) => void;
-  id: number;
-  title: "";
-  desc: "";
-  image: "";
   refetch: () => void;
 }
-interface BlogValues {
-  id: number;
-  title: string;
+interface ServiceValues {
+  serviceName: string;
   description: string;
-  image: File | undefined;
-  date: Date;
+  cost: number;
 }
-const EditBlog: React.FC<ModalProps> = ({
-  setShowModal,
-  title,
-  desc,
-  image,
-  id,
-  refetch,
-}) => {
-  const [values, setValues] = useState<BlogValues>({
-    id: id,
-    title: title,
-    description: desc,
-    image: undefined,
-    date: new Date(),
+const NewServiceModal: React.FC<ModalProps> = ({ setShowModal, refetch }) => {
+  const [values, setValues] = useState<ServiceValues>({
+    serviceName: "",
+    description: "",
+    cost: 0,
   });
-  const { data, getData } = editBlog();
+  const { data, getData } = addService();
   const handleSumbit = (event: any) => {
     event.preventDefault();
-    const formData = new FormData();
-    setValues((prev) => ({ ...prev, date: new Date() }));
-    formData.append("id", values.id.toString());
-    formData.append("title", values.title);
-    formData.append("description", values.description);
-    if (values.image) formData.append("image", values.image);
-    formData.append(
-      "date",
-      values.date.toISOString().slice(0, 19).replace("T", " ")
-    );
-    getData(formData);
+
+    getData(values);
   };
-  useEffect(() => {
-    if (data == "success") refetch();
-  }, [data]);
   const handleInput = (event: any) => {
     setValues((prev) => ({ ...prev, [event.target.name]: event.target.value }));
-    console.log(event.target.value);
   };
   const handleImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) setValues((prev) => ({ ...prev, image: file }));
   };
+  useEffect(() => {
+    if (data && data == "success") refetch();
+  }, [data]);
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -81,28 +56,29 @@ const EditBlog: React.FC<ModalProps> = ({
             {/*body*/}
             <form className="p-6 flex flex-col gap-6" onSubmit={handleSumbit}>
               <Input
-                name="title"
+                name="serviceName"
                 crossOrigin="anonymous"
                 label="Header"
                 onChange={handleInput}
-                value={values.title}
+                required
               ></Input>
               <Input
                 name="description"
                 crossOrigin="anonymous"
                 label="Description"
                 onChange={handleInput}
-                value={values.description}
+                required
               ></Input>
-              <input
-                name="image"
-                type="file"
-                onChange={handleImage}
-                accept="image/*"
-              ></input>
+              <Input
+                name="cost"
+                crossOrigin="anonymous"
+                label="Cost"
+                onChange={handleInput}
+                required
+              ></Input>
 
               {/*footer*/}
-              {data == "success" && <span>Created new blog</span>}
+              {data == "success" && <span>Created new service</span>}
               <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                 <button
                   className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
@@ -122,8 +98,11 @@ const EditBlog: React.FC<ModalProps> = ({
           </div>
         </div>
       </div>
-      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+      <div
+        onClick={() => setShowModal(false)}
+        className="opacity-25 fixed inset-0 z-40 bg-black"
+      ></div>
     </>
   );
 };
-export default EditBlog;
+export default NewServiceModal;

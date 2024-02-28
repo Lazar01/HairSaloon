@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import ServiceCard from "../components/serviceCard";
+import ServiceCard from "../components/ServicesComponents/serviceCard";
 import Footer from "../components/footer";
 import { getAllServices } from "../fetchData";
 import { Button, Typography } from "@material-tailwind/react";
 import { FaPlus } from "react-icons/fa6";
 import { User } from "../hooks/verifyJWTHook";
-import NewServiceModal from "../components/modalMakeNewService";
+import NewServiceModal from "../components/ServicesComponents/modalMakeNewService";
 import clsx from "clsx";
 interface Service {
   ServiceID: number;

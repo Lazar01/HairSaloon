@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { IconButton } from "@material-tailwind/react";
-import EditBlog from "../components/editBlogModal";
-import { deleteBlog } from "../fetchData";
+import EditBlog from "./editBlogModal";
+import { deleteBlog } from "../../fetchData";
 const BlogCard = ({
   image,
   id,

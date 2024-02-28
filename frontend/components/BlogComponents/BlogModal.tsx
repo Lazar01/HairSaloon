@@ -1,27 +1,37 @@
 import { Input } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
-import { addService } from "../fetchData";
+import { addNewBlog } from "../../fetchData";
 interface ModalProps {
   setShowModal: (showModal: boolean) => void;
   refetch: () => void;
 }
-interface ServiceValues {
-  serviceName: string;
+interface BlogValues {
+  title: string;
   description: string;
-  cost: number;
+  image: File | undefined;
+  date: Date;
 }
-const NewServiceModal: React.FC<ModalProps> = ({ setShowModal, refetch }) => {
-  const [values, setValues] = useState<ServiceValues>({
-    serviceName: "",
+const NewBlogModal: React.FC<ModalProps> = ({ setShowModal, refetch }) => {
+  const [values, setValues] = useState<BlogValues>({
+    title: "",
     description: "",
-    cost: 0,
+    image: undefined,
+    date: new Date(),
   });
-  const { data, getData } = addService();
+  const { data, getData } = addNewBlog();
   const handleSumbit = (event: any) => {
     event.preventDefault();
-
-    getData(values);
+    const formData = new FormData();
+    setValues((prev) => ({ ...prev, date: new Date() }));
+    formData.append("title", values.title);
+    formData.append("description", values.description);
+    formData.append(
+      "date",
+      values.date.toISOString().slice(0, 19).replace("T", " ")
+    );
+    if (values.image) formData.append("image", values.image);
+    getData(formData);
   };
   const handleInput = (event: any) => {
     setValues((prev) => ({ ...prev, [event.target.name]: event.target.value }));
@@ -56,7 +66,7 @@ const NewServiceModal: React.FC<ModalProps> = ({ setShowModal, refetch }) => {
             {/*body*/}
             <form className="p-6 flex flex-col gap-6" onSubmit={handleSumbit}>
               <Input
-                name="serviceName"
+                name="title"
                 crossOrigin="anonymous"
                 label="Header"
                 onChange={handleInput}
@@ -69,16 +79,15 @@ const NewServiceModal: React.FC<ModalProps> = ({ setShowModal, refetch }) => {
                 onChange={handleInput}
                 required
               ></Input>
-              <Input
-                name="cost"
-                crossOrigin="anonymous"
-                label="Cost"
-                onChange={handleInput}
-                required
-              ></Input>
+              <input
+                name="image"
+                type="file"
+                onChange={handleImage}
+                accept="image/*"
+              ></input>
 
               {/*footer*/}
-              {data == "success" && <span>Created new service</span>}
+              {data == "success" && <span>Created new blog</span>}
               <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                 <button
                   className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
@@ -105,4 +114,4 @@ const NewServiceModal: React.FC<ModalProps> = ({ setShowModal, refetch }) => {
     </>
   );
 };
-export default NewServiceModal;
+export default NewBlogModal;
