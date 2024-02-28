@@ -9,8 +9,18 @@ const storage = multer.diskStorage({
     cb(null, file.originalname);
   },
 });
+const storageStaff = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "../../frontend/assets/BarbersImages"));
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
 
 const upload = multer({ storage: storage });
+
+const uploadStaffImages = multer({ storage: storageStaff });
 
 const router = require("express").Router();
 
@@ -41,9 +51,13 @@ router.post("/makeAppointment", makeAppointment);
 
 router.get("/getAllEmployees", getAllEmployees);
 
-router.post("/newEmployee", createNewEmployee);
+router.post(
+  "/newEmployee",
+  uploadStaffImages.single("image"),
+  createNewEmployee
+);
 
-router.put("/editEmployee", editEmployee);
+router.post("/editEmployee", uploadStaffImages.single("image"), editEmployee);
 
 router.delete("/deleteEmployee", deleteEmployee);
 

@@ -145,12 +145,8 @@ const editEmployee = (req, res) => {
   const query =
     "UPDATE employee SET Name = ?, Address = ?, Image = ? WHERE EmployeeID=?";
   const imageFileName = req.file ? req.file.filename : null;
-  const values = [
-    req.body.title,
-    req.body.description,
-    imageFileName,
-    req.body.id,
-  ];
+  console.log(req.file);
+  const values = [req.body.name, req.body.address, imageFileName, req.body.id];
   values.forEach((element) => {
     if (element == "")
       return res.status(400).send("Please provide all neccessery data");

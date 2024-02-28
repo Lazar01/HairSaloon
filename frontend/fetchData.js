@@ -2,11 +2,11 @@ import { useAxios } from "use-axios-client";
 import { useLazyAxios } from "use-axios-client";
 
 export function getAllEmployees() {
-  const { data, error, loading } = useAxios({
+  const { data, error, loading, refetch } = useAxios({
     url: "http://localhost:3000/getAllEmployees",
     method: "GET",
   });
-  return { data, error, loading };
+  return { data, error, loading, refetch };
 }
 export function addNewEmployee() {
   const [getData, { data, error, loading }] = useLazyAxios({
@@ -19,7 +19,8 @@ export function addNewEmployee() {
 export function editEmployee() {
   const [getData, { data, error, loading }] = useLazyAxios({
     url: "http://localhost:3000/editEmployee",
-    method: "PUT",
+    method: "POST",
+    headers: { "Content-Type": "multipart/form-data" },
   });
   return { data, error, loading, getData };
 }
