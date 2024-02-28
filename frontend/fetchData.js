@@ -8,6 +8,29 @@ export function getAllEmployees() {
   });
   return { data, error, loading };
 }
+export function addNewEmployee() {
+  const [getData, { data, error, loading }] = useLazyAxios({
+    url: "http://localhost:3000/newEmployee",
+    method: "POST",
+  });
+  return { data, error, loading, getData };
+}
+
+export function editEmployee() {
+  const [getData, { data, error, loading }] = useLazyAxios({
+    url: "http://localhost:3000/editEmployee",
+    method: "PUT",
+  });
+  return { data, error, loading, getData };
+}
+
+export function deleteEmployee() {
+  const [getData, { data, error, loading }] = useLazyAxios({
+    url: "http://localhost:3000/deleteEmployee",
+    method: "DELETE",
+  });
+  return { data, error, loading, getData };
+}
 
 export function getAllServices() {
   const { data, error, loading, refetch } = useAxios({

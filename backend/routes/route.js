@@ -30,6 +30,9 @@ const {
   editService,
   deleteService,
   makeService,
+  createNewEmployee,
+  editEmployee,
+  deleteEmployee,
 } = require("../controllers/appController.js");
 
 router.get("/getAppointments", getAppointments);
@@ -37,6 +40,12 @@ router.get("/getAppointments", getAppointments);
 router.post("/makeAppointment", makeAppointment);
 
 router.get("/getAllEmployees", getAllEmployees);
+
+router.post("/newEmployee", createNewEmployee);
+
+router.put("/editEmployee", editEmployee);
+
+router.delete("/deleteEmployee", deleteEmployee);
 
 router.get("/getAllServices", getAllServices);
 
