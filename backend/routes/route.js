@@ -27,6 +27,9 @@ const {
   makeBlog,
   editBlog,
   deleteBlog,
+  editService,
+  deleteService,
+  makeService,
 } = require("../controllers/appController.js");
 
 router.get("/getAppointments", getAppointments);
@@ -36,6 +39,12 @@ router.post("/makeAppointment", makeAppointment);
 router.get("/getAllEmployees", getAllEmployees);
 
 router.get("/getAllServices", getAllServices);
+
+router.post("/newService", makeService);
+
+router.put("/editService", editService);
+
+router.delete("/deleteService", deleteService);
 
 router.get("/getAllBlogs", getAllBlogs);
 

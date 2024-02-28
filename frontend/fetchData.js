@@ -10,11 +10,35 @@ export function getAllEmployees() {
 }
 
 export function getAllServices() {
-  const { data, error, loading } = useAxios({
+  const { data, error, loading, refetch } = useAxios({
     url: "http://localhost:3000/getAllServices",
     method: "GET",
   });
-  return { data, error, loading };
+  return { data, error, loading, refetch };
+}
+
+export function addService() {
+  const [getData, { data, error, loading }] = useLazyAxios({
+    url: "http://localhost:3000/newService",
+    method: "POST",
+  });
+  return { data, error, loading, getData };
+}
+
+export function editService() {
+  const [getData, { data, error, loading }] = useLazyAxios({
+    url: "http://localhost:3000/editService",
+    method: "PUT",
+  });
+  return { data, error, loading, getData };
+}
+
+export function deleteService() {
+  const [getData, { data, error, loading }] = useLazyAxios({
+    url: "http://localhost:3000/deleteService",
+    method: "DELETE",
+  });
+  return { data, error, loading, getData };
 }
 
 export function getAllBlogs() {
