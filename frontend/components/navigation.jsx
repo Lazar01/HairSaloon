@@ -52,7 +52,10 @@ function NavBar() {
             <BlogPage isAuthenticated={isAuthenticated} role={user.Role} />
           }
         />
-        <Route path="/staff" element={<StaffPage />} />
+        <Route
+          path="/staff"
+          element={<StaffPage isAuthenticated={isAuthenticated} user={user} />}
+        />
         <Route
           path="/services"
           element={
