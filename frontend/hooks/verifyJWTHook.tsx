@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AuthenticateJWT } from "../fetchData.js";
 
-interface User {
+export interface User {
   CustomerID: number;
   Name: string;
   EmailAddress: string;
