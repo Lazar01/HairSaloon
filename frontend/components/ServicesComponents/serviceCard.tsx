@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { editService, deleteService } from "../../fetchData";
 import ModalConfirmDeleteService from "./modalConfirmDeleteService";
+import { User } from "../../hooks/verifyJWTHook";
 
 interface ServiceCardProps {
   title: string;
@@ -14,7 +15,7 @@ interface ServiceCardProps {
   preventEdit: boolean;
   id: number;
   setPreventEditing: (arg: boolean) => void;
-  user: any;
+  user: User;
   refetch: () => void;
 }
 interface ServiceValues {
@@ -90,7 +91,7 @@ const ServiceCard = ({
         )}
 
         <div className="mb-9 rounded-[20px] bg-white p-10 shadow-2 hover:shadow-lg dark:bg-dark-2 md:px-7 xl:px-10">
-          {isAuthenticated && !preventEdit && (
+          {isAuthenticated && !preventEdit && user.Role == "admin" && (
             <div className="relative pb-6">
               <MdEdit
                 className="hover:text-light-green-400 hover:scale-125 text-xl"
