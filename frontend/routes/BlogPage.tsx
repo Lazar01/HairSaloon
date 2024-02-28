@@ -73,19 +73,25 @@ const BlogPage: React.FC<BlogProps> = ({ isAuthenticated, role }) => {
           </div>
 
           <div className="flex flex-wrap">
-            {blogs.map((blog, index) => (
-              <BlogCard
-                isAuthenticated={isAuthenticated}
-                role={role}
-                date={blog.Date}
-                id={blog.BlogID}
-                CardTitle={blog.Title}
-                CardDescription={blog.Description}
-                image={blog.Image}
-                key={index}
-                refetch={refetch}
-              />
-            ))}
+            {blogs.length > 0 ? (
+              blogs.map((blog, index) => (
+                <BlogCard
+                  isAuthenticated={isAuthenticated}
+                  role={role}
+                  date={blog.Date}
+                  id={blog.BlogID}
+                  CardTitle={blog.Title}
+                  CardDescription={blog.Description}
+                  image={blog.Image}
+                  key={index}
+                  refetch={refetch}
+                />
+              ))
+            ) : (
+              <Typography className="mx-auto sm:text-sm md:text-3xl ">
+                There are no blogs at the moment.
+              </Typography>
+            )}
           </div>
         </div>
       </section>
