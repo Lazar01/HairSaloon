@@ -1,27 +1,29 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Footer from "../components/footer";
-import { getAllEmployees } from "../fetchData";
 import { User } from "../hooks/verifyJWTHook";
-import { Button, Typography } from "@material-tailwind/react";
+import { Button, IconButton, Typography } from "@material-tailwind/react";
 import { FaPlus } from "react-icons/fa6";
-interface Employee {
-  EmployeeID: number;
-  Name: string;
-  Addres: string;
-  Image?: string;
-}
+import StaffCard from "../components/StaffComponents/staffCard";
+import { getAllEmployees } from "../fetchData";
 interface StaffProps {
   user: User;
   isAuthenticated: boolean;
 }
+interface Employee {
+  EmployeeID: number;
+  Name: string;
+  Address: string;
+  Image: string | null;
+}
 const StaffPage: React.FC<StaffProps> = ({ user, isAuthenticated }) => {
-  const imgPath = "../assets/BarbersImages/";
   const {
     data: AllEmployeesData,
     loading: EmployeesLoadin,
     error: AllEmployeesError,
+    refetch,
   } = getAllEmployees();
   const [showAddModal, setShowAddModal] = useState(false);
+  console.log(AllEmployeesData);
   return (
     <>
       <div className="mx-auto bg-white pb-8">
@@ -29,12 +31,12 @@ const StaffPage: React.FC<StaffProps> = ({ user, isAuthenticated }) => {
           <Button
             onClick={() => setShowAddModal(!showAddModal)}
             variant="filled"
-            className="float-right m-2"
+            className="float-right mt-4"
           >
             <div className="flex flex-row">
               <FaPlus className="mt-auto mb-auto" />
-              <Typography variant="small" className="pl-2">
-                Add New Service
+              <Typography variant="small" className="">
+                Add New Employee
               </Typography>
             </div>
           </Button>
@@ -44,21 +46,17 @@ const StaffPage: React.FC<StaffProps> = ({ user, isAuthenticated }) => {
             Meet the <u className="text-primary dark:text-primary-400">team</u>
           </h2>
           <div className="mt-6 px-6 grid gap-x-6 md:grid-cols-3 lg:gap-x-12">
-            {AllEmployeesData?.map((employee: Employee, index: any) => (
-              <div className="mb-6 lg:mb-0" key={index}>
-                <div className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-                  <div className="relative overflow-hidden bg-cover bg-no-repeat">
-                    <img
-                      src={imgPath + `${employee.Image}`}
-                      className="h-80 rounded-t-lg mx-auto"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h5 className="mb-4 text-lg font-bold">{employee.Name}</h5>
-                    <p className="mb-4 text-neutral-500">Chief Hair Stylist</p>
-                  </div>
-                </div>
-              </div>
+            {AllEmployeesData?.map((employee: Employee, index: number) => (
+              <StaffCard
+                isAuthenticated={isAuthenticated}
+                user={user}
+                name={employee.Name}
+                address={employee.Address}
+                image={employee.Image ? employee.Image : null}
+                id={employee.EmployeeID}
+                refetch={refetch}
+                key={index}
+              />
             ))}
           </div>
         </section>
