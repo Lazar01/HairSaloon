@@ -1,21 +1,17 @@
 import { Input } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
-import { editBlog, editEmployee } from "../../fetchData";
+import { editEmployee } from "../../fetchData";
+import { StaffValues } from "../../routes/Staff";
 interface ModalProps {
   setShowModal: (showModal: boolean) => void;
   id: number;
   name: string;
   address: string;
-  image: string | null;
+  image: string;
   refetch: () => void;
 }
-interface BlogValues {
-  id: number;
-  name: string;
-  address: string;
-  image: File | undefined;
-}
+
 const EditBlog: React.FC<ModalProps> = ({
   setShowModal,
   name,
@@ -24,24 +20,26 @@ const EditBlog: React.FC<ModalProps> = ({
   id,
   refetch,
 }) => {
-  const [values, setValues] = useState<BlogValues>({
+  const [values, setValues] = useState<StaffValues>({
     id: id,
     name: name,
     address: address,
-    image: undefined,
+    image: null,
   });
+
   const { data, getData } = editEmployee();
   const handleSumbit = (event: any) => {
     event.preventDefault();
     const formData = new FormData();
     setValues((prev) => ({ ...prev, date: new Date() }));
     if (values.image) formData.append("image", values.image);
-    formData.append("id", values.id.toString());
+    if (values.id) formData.append("id", values.id.toString());
     formData.append("name", values.name);
     formData.append("address", values.address);
 
     getData(formData);
   };
+  console.log(values.image);
   useEffect(() => {
     if (data == "success") refetch();
   }, [data]);
@@ -62,7 +60,7 @@ const EditBlog: React.FC<ModalProps> = ({
             {/*header*/}
             <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
               <h3 className="sm:text-base md:text-3xl font-semibold">
-                Add new blog card
+                Edit Employee
               </h3>
               <button
                 className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -85,7 +83,7 @@ const EditBlog: React.FC<ModalProps> = ({
               <Input
                 name="address"
                 crossOrigin="anonymous"
-                label="Description"
+                label="Address"
                 onChange={handleInput}
                 value={values.address}
               ></Input>
@@ -97,7 +95,7 @@ const EditBlog: React.FC<ModalProps> = ({
               ></input>
 
               {/*footer*/}
-              {data == "success" && <span>Created new blog</span>}
+              {data == "success" && <span>Changes have been applied</span>}
               <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                 <button
                   className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
