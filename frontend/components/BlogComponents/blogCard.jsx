@@ -51,7 +51,9 @@ const BlogCard = ({
             </div>
           )}
           <img
-            src={image ? imageUrl : "../assets/service1.jpg"}
+            src={
+              image ? imageUrl : "../../assets/BlogImages/placeholder-image.jpg"
+            }
             alt="Image"
             className="w-full h-80"
           />
