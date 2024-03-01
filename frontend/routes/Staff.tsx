@@ -5,9 +5,16 @@ import { Button, IconButton, Typography } from "@material-tailwind/react";
 import { FaPlus } from "react-icons/fa6";
 import StaffCard from "../components/StaffComponents/staffCard";
 import { getAllEmployees } from "../fetchData";
+import NewEmployeeModal from "../components/StaffComponents/addStaffModal";
 interface StaffProps {
   user: User;
   isAuthenticated: boolean;
+}
+export interface StaffValues {
+  id?: number;
+  name: string;
+  address: string;
+  image: File | null;
 }
 interface Employee {
   EmployeeID: number;
@@ -52,7 +59,7 @@ const StaffPage: React.FC<StaffProps> = ({ user, isAuthenticated }) => {
                 user={user}
                 name={employee.Name}
                 address={employee.Address}
-                image={employee.Image ? employee.Image : null}
+                imageName={employee.Image ? employee.Image : null}
                 id={employee.EmployeeID}
                 refetch={refetch}
                 key={index}
@@ -61,6 +68,9 @@ const StaffPage: React.FC<StaffProps> = ({ user, isAuthenticated }) => {
           </div>
         </section>
       </div>
+      {showAddModal && (
+        <NewEmployeeModal setShowModal={setShowAddModal} refetch={refetch} />
+      )}
       <Footer />
     </>
   );
