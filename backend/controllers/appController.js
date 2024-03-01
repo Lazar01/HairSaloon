@@ -124,7 +124,7 @@ const getAllEmployees = (req, res) => {
 const createNewEmployee = (req, res) => {
   const query = "INSERT INTO employee (Name, Address, Image) VALUES (?, ?, ?)";
   const imageFileName = req.file ? req.file.filename : null;
-  const values = [req.body.title, req.body.description, imageFileName];
+  const values = [req.body.name, req.body.address, imageFileName];
 
   values.forEach((element) => {
     if (element == "")
@@ -142,11 +142,18 @@ const createNewEmployee = (req, res) => {
   });
 };
 const editEmployee = (req, res) => {
-  const query =
-    "UPDATE employee SET Name = ?, Address = ?, Image = ? WHERE EmployeeID=?";
+  let query = "";
+  let values = [];
   const imageFileName = req.file ? req.file.filename : null;
   console.log(req.file);
-  const values = [req.body.name, req.body.address, imageFileName, req.body.id];
+  if (req.file) {
+    query =
+      "UPDATE employee SET Name = ?, Address = ?, Image = ? WHERE EmployeeID=?";
+    values = [req.body.name, req.body.address, imageFileName, req.body.id];
+  } else {
+    query = "UPDATE employee SET Name = ?, Address = ? WHERE EmployeeID=?";
+    values = [req.body.name, req.body.address, req.body.id];
+  }
   values.forEach((element) => {
     if (element == "")
       return res.status(400).send("Please provide all neccessery data");
@@ -155,7 +162,7 @@ const editEmployee = (req, res) => {
   db.query(query, values, (error, results) => {
     if (error) {
       console.error(error.message);
-      return res.status(500).send("Error updating employee: ", error);
+      return res.status(500).send("Error updating employee");
     } else {
       console.log("Employee updated successfully");
       return res.status(200).send("success");
@@ -167,7 +174,7 @@ const deleteEmployee = (req, res) => {
   const query = "DELETE FROM employee WHERE EmployeeID = ?";
   db.query(query, [id], (err, result) => {
     if (err) {
-      console.log("Error deleting employee:", err);
+      console.log("Error deleting employee");
       return res.status(500).send("Error deleting employee");
     } else {
       console.log("Successfully deleted blog");
@@ -278,16 +285,25 @@ const makeBlog = (req, res) => {
   });
 };
 const editBlog = (req, res) => {
-  const query =
-    "UPDATE blogs SET Title = ?, Description = ?, Image = ? WHERE BlogID=?";
+  let query = "";
+  let values = [];
+
   const imageFileName = req.file ? req.file.filename : null;
+  if (req.file) {
+    query =
+      "UPDATE blogs SET Title = ?, Description = ?, Image = ? WHERE BlogID=?";
+    const values = [
+      req.body.title,
+      req.body.description,
+      imageFileName,
+      req.body.id,
+    ];
+  } else {
+    query = "UPDATE blogs SET Title = ?, Description = ? WHERE BlogID=?";
+    values = [req.body.title, req.body.description, req.body.id];
+  }
   console.log(req.file);
-  const values = [
-    req.body.title,
-    req.body.description,
-    imageFileName,
-    req.body.id,
-  ];
+
   values.forEach((element) => {
     if (element == "")
       return res.status(400).send("Please provide all neccessery data");
