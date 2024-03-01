@@ -11,7 +11,7 @@ interface StaffCardProps {
   isAuthenticated: boolean;
   name: string;
   address: string;
-  image: string | null;
+  imageName: string | null;
   id: number;
   refetch: () => void;
 }
@@ -21,7 +21,7 @@ const StaffCard: React.FC<StaffCardProps> = ({
   isAuthenticated,
   name,
   address,
-  image,
+  imageName,
   id,
   refetch,
 }) => {
@@ -36,7 +36,7 @@ const StaffCard: React.FC<StaffCardProps> = ({
     event.stopPropagation();
     setIsDeleting(true);
   }
-  const imgPath = "../assets/BarbersImages/";
+  const imgPath = "../../assets/BarbersImages/" + imageName;
 
   return (
     <>
@@ -56,10 +56,14 @@ const StaffCard: React.FC<StaffCardProps> = ({
               </div>
             </>
           )}
-          <img
-            src={imgPath + `${image}`}
-            className="h-80 rounded-t-lg mx-auto"
-          />
+          {
+            <img
+              src={
+                imageName ? imgPath : "../../assets/BarbersImages/default.jpg"
+              }
+              className="h-80 rounded-t-lg mx-auto"
+            />
+          }
         </div>
         <div className="p-6">
           <h5 className="mb-4 text-lg font-bold">{name}</h5>
@@ -71,7 +75,7 @@ const StaffCard: React.FC<StaffCardProps> = ({
         <EditStaff
           name={name}
           address={address}
-          image={image}
+          image={imgPath}
           setShowModal={setEditMode}
           id={id}
           refetch={refetch}
