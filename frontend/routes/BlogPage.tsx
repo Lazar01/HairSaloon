@@ -3,7 +3,7 @@ import BlogCard from "../components/BlogComponents/blogCard";
 import { Button, Typography } from "@material-tailwind/react";
 import { FaPlus } from "react-icons/fa6";
 import { getAllBlogs, addNewBlog } from "../fetchData";
-import BlogModal from "../components/BlogComponents/BlogModal";
+import BlogModal from "../components/BlogComponents/addNewBlogModal";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 
