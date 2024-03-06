@@ -1,9 +1,10 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import { GiHamburgerMenu, GiBeard } from "react-icons/gi";
 import { IconButton, Typography } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import headerBackground from "../assets/barberHeaderBackground.jpg";
 import { CiLogout } from "react-icons/ci";
+import clsx from "clsx";
 
 interface NavLayoutProps {
   isAuthenticated: boolean;
@@ -22,7 +23,7 @@ const NavigationLayout: React.FC<NavLayoutProps> = ({
     refetch();
   };
   useEffect(() => {}, [isAuthenticated]);
-
+  const location = useLocation();
   return (
     <>
       <nav
@@ -40,21 +41,46 @@ const NavigationLayout: React.FC<NavLayoutProps> = ({
             isMenuOpen ? "block" : "hidden"
           } justify-center md:items-center md:basis-8/12 md:space-x-4 md:flex`}
         >
-          <li className="p-2  text-lg md:text-2xl text-white hover:transform hover:scale-110 hover:animate-pulse drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)] focus:underline">
+          <li
+            className={clsx(
+              "p-2 text-lg md:text-2xl text-white hover:transform hover:scale-110 hover:animate-pulse drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]",
+              { underline: location.pathname == "/home" }
+            )}
+          >
             <Link to="/home">
               <span className="">Home</span>
             </Link>
           </li>
-          <li className="p-2 text-lg md:text-2xl text-white hover:transform hover:scale-110 hover:animate-pulse drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">
+          <li
+            className={clsx(
+              "p-2 text-lg md:text-2xl text-white hover:transform hover:scale-110 hover:animate-pulse drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]",
+              { underline: location.pathname == "/blog" }
+            )}
+          >
             <Link to="/blog">Blogs</Link>
           </li>
-          <li className="p-2 text-lg md:text-2xl text-white hover:transform hover:scale-110 hover:animate-pulse drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">
+          <li
+            className={clsx(
+              "p-2 text-lg md:text-2xl text-white hover:transform hover:scale-110 hover:animate-pulse drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]",
+              { underline: location.pathname == "/services" }
+            )}
+          >
             <Link to="/services">Services</Link>
           </li>
-          <li className="p-2 text-lg md:text-2xl text-white hover:transform hover:scale-110 hover:animate-pulse drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">
+          <li
+            className={clsx(
+              "p-2 text-lg md:text-2xl text-white hover:transform hover:scale-110 hover:animate-pulse drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]",
+              { underline: location.pathname == "/staff" }
+            )}
+          >
             <Link to="/staff">Staff</Link>
           </li>
-          <li className="p-2 text-lg md:text-2xl text-white hover:transform hover:scale-110 hover:animate-pulse drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]">
+          <li
+            className={clsx(
+              "p-2 text-lg md:text-2xl text-white hover:transform hover:scale-110 hover:animate-pulse drop-shadow-[0_1.6px_1.6px_rgba(0,0,0,1)]",
+              { underline: location.pathname == "/contact" }
+            )}
+          >
             <Link to="/contact">Contact</Link>
           </li>
         </ul>
