@@ -1,4 +1,5 @@
 const { db } = require("./appController.js");
+const { userVerification } = require("./appController.js");
 function insertAppointment(req, res) {
   const query =
     "INSERT INTO appointments (Time, Date, EmployeeID, CustomerID) VALUES (?, ?, ?, ?)";
@@ -33,7 +34,8 @@ const getAppointments = async (req, res) => {
     const { EmployeeID, Date } = req.query;
     const query = `SELECT * FROM appointments WHERE EmployeeID = ? AND Date = ?`;
     const values = [EmployeeID, Date];
-    const appointmentsData = await db.query(query, values, (err, result) => {
+    console.log(req.query);
+    await db.query(query, values, (err, result) => {
       const time = [
         "09:00",
         "09:30",
@@ -66,40 +68,46 @@ const getAppointments = async (req, res) => {
 };
 
 const makeAppointment = (req, res) => {
-  const reqDate = new Date(req.body.date);
-  const [hours, minutes, seconds] = req.body.time.split(":");
-  reqDate.setHours(hours);
-  reqDate.setMinutes(minutes);
-  reqDate.setSeconds = seconds;
-  const currentDate = new Date();
-  console.log(reqDate);
-  const query_DateRestriction =
-    "SELECT max(date) as latestDate, max(time) as time FROM appointments WHERE customerid=16";
-  const DateRestrictionValues = req.body.customerID;
-  db.query(query_DateRestriction, DateRestrictionValues, (err, data) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).send("Cant query dates from appointments!");
-    } else if (data.length > 0) {
-      const [hours, minutes, seconds] = data[0].time.split(":");
+  const token = req.headers["access-token"];
+  const verify = userVerification(token);
+  if (!verify.bool) {
+    return res.send("NotAuthenticated");
+  } else {
+    const reqDate = new Date(req.body.date);
+    const [hours, minutes, seconds] = req.body.time.split(":");
+    reqDate.setHours(hours);
+    reqDate.setMinutes(minutes);
+    reqDate.setSeconds = seconds;
+    const currentDate = new Date();
+    console.log(reqDate);
+    const query_DateRestriction =
+      "SELECT max(date) as latestDate, max(time) as time FROM appointments WHERE customerid=16";
+    const DateRestrictionValues = req.body.customerID;
+    db.query(query_DateRestriction, DateRestrictionValues, (err, data) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("Cant query dates from appointments!");
+      } else if (data.length > 0) {
+        const [hours, minutes, seconds] = data[0].time.split(":");
 
-      const AppointmentDate = new Date(data[0].latestDate);
-      AppointmentDate.setHours(hours);
-      AppointmentDate.setMinutes(minutes);
-      AppointmentDate.setSeconds(seconds);
+        const AppointmentDate = new Date(data[0].latestDate);
+        AppointmentDate.setHours(hours);
+        AppointmentDate.setMinutes(minutes);
+        AppointmentDate.setSeconds(seconds);
 
-      console.log(currentDate + " | " + AppointmentDate);
+        console.log(currentDate + " | " + AppointmentDate);
 
-      if (reqDate < currentDate) return res.status(406).send("RejectedDate");
-      else if (AppointmentDate >= currentDate)
-        return res.status(406).send("AlreadyActive");
-      else {
+        if (reqDate < currentDate) return res.status(406).send("RejectedDate");
+        else if (AppointmentDate >= currentDate)
+          return res.status(406).send("AlreadyActive");
+        else {
+          insertAppointment(req, res);
+        }
+      } else {
         insertAppointment(req, res);
       }
-    } else {
-      insertAppointment(req, res);
-    }
-  });
+    });
+  }
 };
 
 module.exports = {
