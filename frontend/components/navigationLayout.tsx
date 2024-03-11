@@ -98,11 +98,13 @@ const NavigationLayout: React.FC<NavLayoutProps> = ({
           </div>
           {isAuthenticated ? (
             <>
-              <Typography variant="lead">Hello,</Typography>
+              <Typography variant="lead" className="sm:text-sm md:text-lg">
+                Hello,
+              </Typography>
               <Typography
                 variant="lead"
                 color="amber"
-                className="underline p-2"
+                className="underline p-2 sm:text-sm md:text-lg"
               >
                 {" "}
                 {user.Name}
