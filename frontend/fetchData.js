@@ -1,6 +1,25 @@
 import { useAxios } from "use-axios-client";
 import { useLazyAxios } from "use-axios-client";
 
+export function getAppointmentsAxios(chosenEmployee, chosenDate) {
+  console.log(chosenEmployee);
+  const [getAppointments, { data, error, loading }] = useLazyAxios({
+    url: "http://localhost:3000/getAppointments",
+    method: "GET",
+    params: { EmployeeID: chosenEmployee, Date: chosenDate },
+  });
+  return { data, error, loading, getAppointments };
+}
+
+export function makeAppointment() {
+  const [makeNewAppointment, { data, error, loading }] = useLazyAxios({
+    url: "http://localhost:3000/makeAppointment",
+    method: "POST",
+    headers: { "access-token": localStorage.getItem("token") },
+  });
+  return { makeNewAppointment, data, error, loading };
+}
+
 export function getAllEmployees() {
   const { data, error, loading, refetch } = useAxios({
     url: "http://localhost:3000/getAllEmployees",
