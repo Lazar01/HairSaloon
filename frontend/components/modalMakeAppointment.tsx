@@ -13,22 +13,14 @@ import {
 } from "@material-tailwind/react";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
-import { getAllEmployees } from "../fetchData";
-import { useLazyAxios } from "use-axios-client";
+import { getAllEmployees, makeAppointment } from "../fetchData";
 import { IoClose } from "react-icons/io5";
 import { Carousel, IconButton } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
 interface ModalProps {
   showModal: boolean;
   toggleModal: (showModal: boolean) => void;
   userID: number;
-}
-
-interface Appointment {
-  AppointmentID: number;
-  Time: string;
-  Date: Date;
-  EmployeeID: number;
-  CustomerID: number;
 }
 
 interface Employee {
@@ -36,28 +28,39 @@ interface Employee {
   Name: string;
   Addres: string;
   Image?: string;
+  Schedule: string;
 }
 
 const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
+  const [date, setDate] = useState(new Date());
+  const [chosenDate, setChosenDate] = useState(format(date, "yyyy-MM-dd"));
+  const [chosenTime, setChosenTime] = useState("");
+  const [chosenEmployee, setChosenEmployee] = useState(0);
+  //AXIOS CALLS//
   const {
     data: AllEmployeesData,
     loading: EmployeesLoadin,
     error: AllEmployeesError,
   } = getAllEmployees();
 
-  const [
-    makeAppointment,
-    {
-      data: makeAppointmentResponse,
-      error: makeAppointmentError,
-      loading: makeAppointmentLoading,
-    },
-  ] = useLazyAxios({
-    url: "http://localhost:3000/makeAppointment",
-    method: "POST",
-  });
+  const {
+    data: makeAppointmentResponse,
+    error: makeAppointmentError,
+    loading: makeAppointmentLoading,
+    makeNewAppointment,
+  } = makeAppointment();
+
+  //Error handling when making appointment//
+
   useEffect(() => {
     if (
+      makeAppointmentError &&
+      // @ts-ignore
+      makeAppointmentError.response.data == "NotAuthenticated"
+    ) {
+      const navigate = useNavigate();
+      navigate("/");
+    } else if (
       makeAppointmentError &&
       // @ts-ignore
       makeAppointmentError.response.data == "RejectedDate"
@@ -68,28 +71,24 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
   }, [makeAppointmentError]);
 
   const imgPath = "../assets/BarbersImages/";
-  const [date, setDate] = useState(new Date());
-  const [chosenDate, setChosenDate] = useState(format(date, "yyyy-MM-dd"));
-  const [chosenTime, setChosenTime] = useState("");
-  const [chosenEmployee, setChosenEmployee] = useState(0);
   const time = [
-    "09:00",
-    "09:30",
-    "10:00",
-    "10:30",
-    "11:00",
-    "11:30",
-    "12:00",
-    "12:30",
-    "13:00",
-    "13:30",
-    "14:00",
-    "14:30",
-    "15:00",
-    "15:30",
-    "16:00",
-    "16:30",
-    "17:00",
+    "09:00:00",
+    "09:30:00",
+    "10:00:00",
+    "10:30:00",
+    "11:00:00",
+    "11:30:00",
+    "12:00:00",
+    "12:30:00",
+    "13:00:00",
+    "13:30:00",
+    "14:00:00",
+    "14:30:00",
+    "15:00:00",
+    "15:30:00",
+    "16:00:00",
+    "16:30:00",
+    "17:00:00",
   ];
   const [filteredTime, setFilteredTime] = useState<string[]>([]);
   const [isEmployeeSelected, setIsEmployeeSelected] = useState(false);
@@ -100,23 +99,16 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
   //
   useEffect(() => {
     if (showModal && AllEmployeesData) {
-      setChosenEmployee(AllEmployeesData[0].EmployeeID);
-      setEmployees(AllEmployeesData?.map((employee: Employee) => employee));
+      setChosenEmployee(0);
+      const updatedEmployees = AllEmployeesData.map((employee: Employee) => {
+        return {
+          ...employee,
+          Schedule: JSON.parse(employee["Schedule"]),
+        };
+      });
+      setEmployees(updatedEmployees);
     }
   }, [showModal, AllEmployeesData]);
-
-  const [
-    getAppointments,
-    {
-      data: getAppointmentData,
-      error: getAppointmentDataError,
-      loading: getAppointmentDataLoading,
-    },
-  ] = useLazyAxios({
-    url: "http://localhost:3000/getAppointments",
-    method: "GET",
-    params: { EmployeeID: chosenEmployee, Date: chosenDate },
-  });
 
   const handleSaveChanges = (e: FormEvent) => {
     e.preventDefault();
@@ -131,7 +123,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
   };
   //If the appointment is being made fetch the data
   useEffect(() => {
-    if (isMakingAppointment) makeAppointment(appointmentData);
+    if (isMakingAppointment) makeNewAppointment(appointmentData);
   }, [appointmentData]);
   //When an appointmend is made, if the answer from be is success close the modal
   useEffect(() => {
@@ -141,17 +133,22 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
       }, 2000);
   }, [makeAppointmentResponse]);
   //Gettin appointments from backend when employee is chosen/changed
-  useEffect(() => {
-    if (chosenEmployee) getAppointments();
-  }, [chosenEmployee]);
+
   //Setting the available time
   useEffect(() => {
-    if (getAppointmentData) {
-      setFilteredTime(getAppointmentData as []);
-      setIsEmployeeSelected(true);
+    const employee = employees.find((value, index) => index == chosenEmployee);
+    if (employee) {
+      let keys = Object.keys(employee["Schedule"]);
+      const ifDate = keys.find((value) => value == chosenDate);
+      if (ifDate) {
+        const filteredTime = time.filter((value) => {
+          if (value !== employee["Schedule"][ifDate]) return value;
+        });
+        setFilteredTime(filteredTime);
+      }
     }
-  }, [getAppointmentData]);
-
+    setIsEmployeeSelected(true);
+  }, [chosenDate]);
   return (
     <>
       <form onSubmit={(e) => handleSaveChanges(e)}>
@@ -172,156 +169,166 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
                 </button>
               </div>
               {/* Body */}
-              <div
-                className="relative p-6 flex-auto
+              {employees ? (
+                <div
+                  className="relative p-6 flex-auto
                 "
-              >
-                {/*All the employees */}
-                <Carousel
-                  className="mb-8"
-                  prevArrow={({ handlePrev, activeIndex }) => {
-                    useEffect(() => {
-                      setChosenEmployee(activeIndex + 1);
-                    }, [activeIndex]);
-
-                    return (
-                      <IconButton
-                        variant="text"
-                        size="lg"
-                        onClick={handlePrev}
-                        className="!absolute bottom-0 left-4 -translate-y-2/4"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={2}
-                          stroke="currentColor"
-                          className="h-6 w-6"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-                          />
-                        </svg>
-                      </IconButton>
-                    );
-                  }}
-                  nextArrow={({ handleNext }) => (
-                    <IconButton
-                      variant="text"
-                      size="lg"
-                      onClick={handleNext}
-                      className="!absolute bottom-0 !right-4 -translate-y-2/4"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="h-6 w-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                        />
-                      </svg>
-                    </IconButton>
-                  )}
                 >
-                  {employees.map((employee: Employee, index) => (
-                    <Card key={index}>
-                      <CardHeader
-                        shadow={false}
-                        floated={false}
-                        className="sm:h-60 md:h-64"
-                      >
-                        <img
-                          src={
-                            employee.Image
-                              ? `${imgPath + employee.Image}`
-                              : "../assets/homePageImg1.jpg"
-                          }
-                          alt="card-image"
-                          className="h-full w-full object-cover"
-                        />
-                      </CardHeader>
-                      <CardBody>
-                        <div className="mb-2 text-center">
-                          <Typography color="black" className="font-medium">
-                            {employee.Name}
-                          </Typography>
-                        </div>
-                      </CardBody>
-                    </Card>
-                  ))}
-                </Carousel>
-                {/* Date Picker */}
-                <Popover placement="bottom">
-                  <PopoverHandler>
-                    <Input
-                      label="Select a Date"
-                      onChange={() => null}
-                      value={date ? format(date, "yyyy-MM-dd") : ""}
-                      crossOrigin={""}
-                    />
-                  </PopoverHandler>
-                  <PopoverContent className="z-50">
-                    <DayPicker
-                      mode="single"
-                      selected={date}
-                      onSelect={(selectedDate) => {
-                        const formattedDate = selectedDate
-                          ? format(selectedDate, "yyyy-MM-dd")
-                          : null;
-                        setChosenDate(formattedDate ? formattedDate : "");
-                        setDate(selectedDate as Date);
-                      }}
-                      showOutsideDays
-                      className="border-0"
-                      fromDate={new Date()}
-                      required
-                      footer={makeAppointmentResponse === "date"}
-                    />
-                  </PopoverContent>
-                </Popover>
-                {/* Time Picker */}
-                <div className="w-72 mt-5">
-                  <Select
-                    error={makeAppointmentResponse === "time"}
-                    label="Select Time"
-                    onChange={(time) => setChosenTime(time || "")}
+                  {/*All the employees */}
+
+                  <Carousel
+                    className="mb-8"
+                    prevArrow={({ handlePrev, activeIndex }) => {
+                      useEffect(() => {
+                        setChosenEmployee(activeIndex);
+                      }, [activeIndex]);
+
+                      return (
+                        <IconButton
+                          variant="text"
+                          size="lg"
+                          onClick={handlePrev}
+                          className="!absolute bottom-0 left-4 -translate-y-2/4"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2}
+                            stroke="currentColor"
+                            className="h-6 w-6"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                            />
+                          </svg>
+                        </IconButton>
+                      );
+                    }}
+                    nextArrow={({ handleNext, activeIndex }) => {
+                      useEffect(() => {
+                        setChosenEmployee(activeIndex);
+                      }, [activeIndex]);
+                      return (
+                        <IconButton
+                          variant="text"
+                          size="lg"
+                          onClick={handleNext}
+                          className="!absolute bottom-0 !right-4 -translate-y-2/4"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2}
+                            stroke="currentColor"
+                            className="h-6 w-6"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                            />
+                          </svg>
+                        </IconButton>
+                      );
+                    }}
                   >
-                    {!isEmployeeSelected
-                      ? time.map((time, index) => (
-                          <Option
-                            className="text-center"
-                            key={index}
-                            value={time}
-                          >
-                            {time}
-                          </Option>
-                        ))
-                      : filteredTime.map((time, index) => (
-                          <Option
-                            className="text-center"
-                            key={index}
-                            value={time}
-                          >
-                            {time}
-                          </Option>
-                        ))}
-                  </Select>
-                  {makeAppointmentResponse === "time" && (
-                    <Typography variant="small">
-                      Please choose time for your appointment
-                    </Typography>
-                  )}
+                    {employees.map((employee: Employee, index) => (
+                      <Card key={index}>
+                        <CardHeader
+                          shadow={false}
+                          floated={false}
+                          className="sm:h-60 md:h-64"
+                        >
+                          <img
+                            src={
+                              employee.Image
+                                ? `${imgPath + employee.Image}`
+                                : "../assets/homePageImg1.jpg"
+                            }
+                            alt="card-image"
+                            className="h-full w-full object-cover"
+                          />
+                        </CardHeader>
+                        <CardBody>
+                          <div className="mb-2 text-center">
+                            <Typography color="black" className="font-medium">
+                              {employee.Name}
+                            </Typography>
+                          </div>
+                        </CardBody>
+                      </Card>
+                    ))}
+                  </Carousel>
+                  {/* Date Picker */}
+                  <Popover placement="bottom">
+                    <PopoverHandler>
+                      <Input
+                        label="Select a Date"
+                        onChange={() => null}
+                        value={date ? format(date, "yyyy-MM-dd") : ""}
+                        crossOrigin={""}
+                      />
+                    </PopoverHandler>
+                    <PopoverContent className="z-50">
+                      <DayPicker
+                        mode="single"
+                        selected={date}
+                        onSelect={(selectedDate) => {
+                          const formattedDate = selectedDate
+                            ? format(selectedDate, "yyyy-MM-dd")
+                            : null;
+                          setChosenDate(formattedDate ? formattedDate : "");
+                          setDate(selectedDate as Date);
+                        }}
+                        showOutsideDays
+                        className="border-0"
+                        fromDate={new Date()}
+                        required
+                        footer={makeAppointmentResponse === "date"}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  {/* Time Picker */}
+                  <div className="w-72 mt-5">
+                    <Select
+                      error={makeAppointmentResponse === "time"}
+                      label="Select Time"
+                      onChange={(time) => setChosenTime(time || "")}
+                    >
+                      {filteredTime.length == 0
+                        ? time.map((time, index) => (
+                            <Option
+                              className="text-center"
+                              key={index}
+                              value={time}
+                            >
+                              {time}
+                            </Option>
+                          ))
+                        : filteredTime.map((time, index) => (
+                            <Option
+                              className="text-center"
+                              key={index}
+                              value={time}
+                            >
+                              {time}
+                            </Option>
+                          ))}
+                    </Select>
+                    {makeAppointmentResponse === "time" && (
+                      <Typography variant="small">
+                        Please choose time for your appointment
+                      </Typography>
+                    )}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div>No employees</div>
+              )}
               {/* Footer */}
               <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                 <button
