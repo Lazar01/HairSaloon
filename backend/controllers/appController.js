@@ -5,6 +5,23 @@ const Mailgen = require("mailgen");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+function userVerification(token) {
+  if (!token) {
+    return { bool: false, message: "No Token" };
+  } else {
+    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+      if (err) {
+        return { bool: false, message: "NotAuthenticated" };
+      } else {
+        return {
+          bool: true,
+          message: "Authenticated",
+        };
+      }
+    });
+  }
+}
+
 const signup = (req, res) => {
   const { name, email, contactNumber, password } = req.body;
   console.log(typeof password);
@@ -77,15 +94,15 @@ const login = (req, res) => {
 const verifyJWT = (req, res, next) => {
   const token = req.headers["access-token"];
   if (!token) {
-    console.log("ovde1");
+    console.log("No token!");
     return res.send("No token!");
   } else {
     jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
       if (err) {
-        console.log("ovde2");
+        console.log("Not Authenticated!");
         return res.send("Not Authenticated");
       } else {
-        console.log("ovde3");
+        console.log("Authenticated");
         return res.json({
           Message: "Authenticated",
           user: decoded.id,
@@ -163,4 +180,5 @@ module.exports = {
   signup,
   login,
   verifyJWT,
+  userVerification,
 };
