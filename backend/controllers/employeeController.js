@@ -1,18 +1,19 @@
 const { db } = require("./appController.js");
 
 const getAllEmployees = (req, res) => {
-  const query = "SELECT * FROM employee";
-
+  const query =
+    "SELECT a.EmployeeID, a.Name, a.Address, a.Image, JSON_OBJECTAGG(COALESCE(a.Date, ''), a.Time) AS Schedule FROM (SELECT employee.EmployeeID, Name, Address, Image, Date, GROUP_CONCAT(Time) AS Time FROM employee LEFT JOIN appointments ON employee.EmployeeID = appointments.EmployeeID AND appointments.Date > CURRENT_DATE() GROUP BY employee.EmployeeID, employee.Name, employee.Address, employee.Image, appointments.Date) AS a GROUP BY a.EmployeeID, a.Name, a.Address, a.Image ORDER BY a.EmployeeID LIMIT 0, 1000;";
   db.query(query, (err, result) => {
     if (err) {
       console.log(err);
       return res.status(500).json("Error getting all the employees");
     } else {
-      console.log("Emloyees retrieved successfully");
+      console.log("Succesfuly retrieved emplooyes!");
       return res.status(200).json(result);
     }
   });
 };
+
 const createNewEmployee = (req, res) => {
   const query = "INSERT INTO employee (Name, Address, Image) VALUES (?, ?, ?)";
   const imageFileName = req.file ? req.file.filename : null;
