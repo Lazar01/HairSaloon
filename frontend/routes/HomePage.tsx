@@ -6,7 +6,7 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
-import Modal from "../components/modalMakeAppointment";
+import Modal from "../components/AppointmentComponents/modalMakeAppointment";
 import { useState } from "react";
 import Footer from "../components/footer";
 import { Link, useNavigate } from "react-router-dom";

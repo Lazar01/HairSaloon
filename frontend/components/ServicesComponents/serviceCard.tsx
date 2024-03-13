@@ -1,6 +1,6 @@
 import { Typography, Button, Input } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
-import Modal from "../modalMakeAppointment";
+import Modal from "../AppointmentComponents/modalMakeAppointment";
 import { useNavigate } from "react-router-dom";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { editService, deleteService } from "../../fetchData";

@@ -13,7 +13,7 @@ import {
 } from "@material-tailwind/react";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
-import { getAllEmployees, makeAppointment } from "../fetchData";
+import { getAllEmployees, makeAppointment } from "../../fetchData";
 import { IoClose } from "react-icons/io5";
 import { Carousel, IconButton } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
@@ -92,7 +92,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
   ];
   const [filteredTime, setFilteredTime] = useState<string[]>([]);
   const [isEmployeeSelected, setIsEmployeeSelected] = useState(false);
-  const [employees, setEmployees] = useState<[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [appointmentData, setAppointmentData] = useState({});
   const [isMakingAppointment, setIsMakingAppointment] = useState(false);
 
@@ -109,7 +109,9 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
       setEmployees(updatedEmployees);
     }
   }, [showModal, AllEmployeesData]);
-
+  useEffect(() => {
+    if (employees[0]) setChosenEmployee(employees[0]?.EmployeeID);
+  }, [employees]);
   const handleSaveChanges = (e: FormEvent) => {
     e.preventDefault();
     const newAppointmentData = {
@@ -142,7 +144,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
       const ifDate = keys.find((value) => value == chosenDate);
       if (ifDate) {
         const filteredTime = time.filter((value) => {
-          if (value !== employee["Schedule"][ifDate]) return value;
+          if (value !== employee["Schedule"][ifDate as any]) return value;
         });
         setFilteredTime(filteredTime);
       }
@@ -180,7 +182,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
                     className="mb-8"
                     prevArrow={({ handlePrev, activeIndex }) => {
                       useEffect(() => {
-                        setChosenEmployee(activeIndex);
+                        setChosenEmployee(employees[activeIndex]?.EmployeeID);
                       }, [activeIndex]);
 
                       return (
@@ -208,9 +210,6 @@ const Modal: React.FC<ModalProps> = ({ showModal, toggleModal, userID }) => {
                       );
                     }}
                     nextArrow={({ handleNext, activeIndex }) => {
-                      useEffect(() => {
-                        setChosenEmployee(activeIndex);
-                      }, [activeIndex]);
                       return (
                         <IconButton
                           variant="text"
