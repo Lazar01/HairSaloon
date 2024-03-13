@@ -1,4 +1,4 @@
-interface Error {
+export interface Error {
   email: string;
   name: string;
   password: string;
@@ -6,7 +6,7 @@ interface Error {
 
 interface Values {
   email: string;
-  password: string;
+  password?: string;
   name?: string;
 }
 
