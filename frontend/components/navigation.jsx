@@ -7,6 +7,7 @@ import StaffPage from "../routes/Staff";
 import ServicesPage from "../routes/Services";
 import Login from "../routes/Login";
 import Register from "../routes/Register";
+import UserPage from "../routes/UserPage";
 import useVerifyAuthentication from "../hooks/verifyJWTHook";
 import React, { useEffect } from "react";
 function NavBar() {
@@ -63,6 +64,16 @@ function NavBar() {
           }
         />
         <Route path="*" element={<HomePage />} />
+        <Route
+          path="/user"
+          element={
+            <UserPage
+              user={user}
+              isAuthenticated={isAuthenticated}
+              refetch={refetch}
+            ></UserPage>
+          }
+        ></Route>
       </Routes>
     </>
   );

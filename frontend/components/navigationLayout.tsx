@@ -101,14 +101,16 @@ const NavigationLayout: React.FC<NavLayoutProps> = ({
               <Typography variant="lead" className="sm:text-sm md:text-lg">
                 Hello,
               </Typography>
-              <Typography
-                variant="lead"
-                color="amber"
-                className="underline p-2 sm:text-sm md:text-lg"
-              >
-                {" "}
-                {user.Name}
-              </Typography>
+              <Link to="/user">
+                <Typography
+                  variant="lead"
+                  color="amber"
+                  className="underline p-2 sm:text-sm md:text-lg"
+                >
+                  {" "}
+                  {user.Name}
+                </Typography>
+              </Link>
               <button onClick={handleLogOut}>
                 <CiLogout />
               </button>
