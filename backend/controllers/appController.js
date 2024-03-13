@@ -6,20 +6,23 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 function userVerification(token) {
-  if (!token) {
-    return { bool: false, message: "No Token" };
-  } else {
-    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
-      if (err) {
-        return { bool: false, message: "NotAuthenticated" };
-      } else {
-        return {
-          bool: true,
-          message: "Authenticated",
-        };
-      }
-    });
-  }
+  return new Promise((resolve, reject) => {
+    if (!token) {
+      resolve({ bool: false, message: "No Token" });
+    } else {
+      jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+        if (err) {
+          console.log(err);
+          resolve({ bool: false, message: "NotAuthenticated" });
+        } else {
+          resolve({
+            bool: true,
+            message: "Authenticated",
+          });
+        }
+      });
+    }
+  });
 }
 
 const signup = (req, res) => {
