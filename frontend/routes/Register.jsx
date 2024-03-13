@@ -9,7 +9,7 @@ export default function Register() {
   const isAuthenticated = useVerifyAuthentication();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated.isAuthenticated) {
       navigate("/home");
     }
   }, [isAuthenticated]);
@@ -30,7 +30,7 @@ export default function Register() {
     setErrors(validation(values));
   };
   useEffect(() => {
-    if (errors.mail === "" && errors.name == "" && errors.password == "")
+    if (errors.email === "" && errors.name == "" && errors.password == "")
       getData(values);
   }, [errors]);
   useEffect(() => {
