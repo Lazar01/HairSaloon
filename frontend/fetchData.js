@@ -1,14 +1,17 @@
 import { useAxios } from "use-axios-client";
 import { useLazyAxios } from "use-axios-client";
 
-export function getAppointmentsAxios(chosenEmployee, chosenDate) {
-  console.log(chosenEmployee);
-  const [getAppointments, { data, error, loading }] = useLazyAxios({
+export function getAppointmentsAxios(CustomerID, UserRole) {
+  const {
+    data: appointment,
+    error: appointmentError,
+    loading: appointmentLoading,
+  } = useAxios({
     url: "http://localhost:3000/getAppointments",
     method: "GET",
-    params: { EmployeeID: chosenEmployee, Date: chosenDate },
+    params: { CustomerID: CustomerID, UserRole: UserRole },
   });
-  return { data, error, loading, getAppointments };
+  return { appointment, appointmentError, appointmentLoading };
 }
 
 export function makeAppointment() {
@@ -150,4 +153,13 @@ export function AuthenticateJWT() {
   });
 
   return { data, error, loading, refetch };
+}
+
+export function editUserProfile() {
+  const [editProfile, { data, error, loading }] = useLazyAxios({
+    url: "http://localhost:3000/editUserProfile",
+    method: "PUT",
+    headers: { "access-token": localStorage.getItem("token") },
+  });
+  return { data, error, loading, editProfile };
 }
