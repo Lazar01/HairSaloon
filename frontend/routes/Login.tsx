@@ -9,8 +9,8 @@ interface LoginProps {
 }
 
 interface Error {
-  email: string;
-  password: string;
+  email: string | null;
+  password: string | null;
 }
 
 const Login: React.FC<LoginProps> = ({ isAuthenticated, refetch }) => {
@@ -23,19 +23,14 @@ const Login: React.FC<LoginProps> = ({ isAuthenticated, refetch }) => {
 
   const { getData, data, error, cancel } = LogIn();
 
-  //Canceling first LogIn request.
-  useEffect(() => {
-    cancel();
-  }, []);
-
   console.log(error?.message);
   const [values, setValues] = useState({
     email: "",
     password: "",
   });
   const [errors, setErrors] = useState<Error>({
-    email: "",
-    password: "",
+    email: null,
+    password: null,
   });
 
   const handleInput = (event: any) => {
